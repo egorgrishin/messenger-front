@@ -1,30 +1,29 @@
-import {createRouter, createWebHistory, Router} from "vue-router";
+import { createRouter, createWebHistory, RouteLocationNormalized, Router } from "vue-router";
 import base from "./routes/base.ts";
 import auth from "./routes/auth.ts";
+import chat from "./routes/chat.ts";
+import AuthService from "./services/AuthService.ts";
 
 console.log("Router");
-
-// import {useUserStore} from "./stores/userStore.ts";
-
-// const userStore = useUserStore();
-//
-// function guestHasAccess(name: string | undefined): boolean {
-//   const available: string[] = ['home\', \'login\', \'register'];
-//   return name ? available.includes(name) : false;
-// }
 
 const router: Router = createRouter({
   history: createWebHistory(),
   routes: [
     ...auth,
     ...base,
+    ...chat,
   ],
 });
 
-// router.beforeEach((to) => {
-//   return !userStore.user
-//     ? guestHasAccess(to.name?.toString())
-//     : true;
-// })
+router.beforeEach(async (to: RouteLocationNormalized): Promise<boolean> => {
+  const name: string | undefined = to.name?.toString();
+  if (!name) {
+    return false;
+  }
+
+  const isLogged: boolean = await new AuthService().checkAuth();
+  console.log(isLogged !== ['home', 'login', 'register'].includes(name));
+  return isLogged !== ['home', 'login', 'register'].includes(name);
+});
 
 export default router;

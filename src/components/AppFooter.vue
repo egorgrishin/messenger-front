@@ -16,7 +16,10 @@ const author = 'Гришин Е. А.';
 </template>
 
 <style lang="scss" scoped>
+@import "../assets/main";
+
 footer {
+  height: $footer-height;
   display: flex;
   width: 100%;
   padding: 1rem;

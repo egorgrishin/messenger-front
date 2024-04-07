@@ -1,5 +1,4 @@
 <script setup lang="ts">
-const user = localStorage.getItem('user');
 
 </script>
 

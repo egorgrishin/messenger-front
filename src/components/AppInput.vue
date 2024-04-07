@@ -10,10 +10,9 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   required: true,
 });
-
-const model = defineModel('model', { required: true });
-
-console.log(model)
+const model = defineModel('model', {
+  required: true,
+});
 </script>
 
 <template>

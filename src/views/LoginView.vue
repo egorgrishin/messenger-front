@@ -1,22 +1,26 @@
 <script setup lang="ts">
 import AppInput from "../components/AppInput.vue";
-import { ref } from "vue";
-import { login } from "../api/auth.ts";
+import { Ref, ref } from "vue";
+import AuthService from "../services/AuthService.ts";
+import { Router, useRouter } from "vue-router";
 
-const nick = ref<string>('');
-const password = ref<string>('');
+const router: Router = useRouter();
+const nick: Ref<string> = ref<string>('');
+const password: Ref<string> = ref<string>('');
 
-const onSubmit = (event: Event) => {
+const onLogin = async (event: Event): Promise<void> => {
   event.preventDefault();
-  console.log(login(nick.value, password.value));
+  if (await new AuthService().login(nick.value, password.value)) {
+    await router.push({ name: 'chat' });
+  }
 }
 </script>
 
 <template>
-  <form @submit="onSubmit">
+  <form @submit="onLogin">
     <AppInput v-model:model="nick" type="text" placeholder="Nick" />
     <AppInput v-model:model="password" type="password" placeholder="Password" />
-    <button>Login</button>
+    <button>Войти</button>
   </form>
 </template>
 

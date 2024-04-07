@@ -1,22 +1,22 @@
 <script setup lang="ts">
 import AppInput from "../components/AppInput.vue";
 import { ref } from "vue";
-import { create } from "../api/user.ts";
+import AuthService from "../services/AuthService.ts";
 
 const nick = ref<string>('');
 const password = ref<string>('');
 
-const onSubmit = (event: Event) => {
+const onRegister = async (event: Event) => {
   event.preventDefault();
-  console.log(create(nick.value, password.value));
+  await new AuthService().register(nick.value, password.value);
 }
 </script>
 
 <template>
-  <form @submit="onSubmit">
+  <form @submit="onRegister">
     <AppInput v-model:model="nick" type="text" placeholder="Nick" />
     <AppInput v-model:model="password" type="password" placeholder="Password" />
-    <button>Register</button>
+    <button>Регистрация</button>
   </form>
 </template>
 
