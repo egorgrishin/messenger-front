@@ -1,19 +1,12 @@
 <script setup lang="ts">
-import { onMounted, Ref, ref } from "vue";
+import { onMounted } from "vue";
 import { Chat } from "../interfaces/chat";
 import ChatService from "../services/ChatService";
 import useList, { Direction } from "../composables/list";
 import router from "../router.config";
 
 const userId: number = +(localStorage.getItem('userId') ?? 0);
-const chatList: Ref<Element | null> = ref(null);
-
-const {
-  items,
-  hasError,
-  loadItems,
-  scrollList,
-} = useList<Chat>({
+const scroller = useList<Chat>({
   id: userId,
   direction: Direction.Down,
   getItems: new ChatService().getUserChats,
@@ -21,9 +14,10 @@ const {
 });
 
 onMounted(() => {
-  chatList.value?.addEventListener('scroll', scrollList);
+  console.log(333, scroller);
+  scroller.itemsList.value?.addEventListener('scroll', scroller.scrollList());
 });
-loadItems();
+scroller.loadItems();
 
 const openChat: (chat: Chat) => void = (chat: Chat): void => {
   router.push({
@@ -36,11 +30,11 @@ const openChat: (chat: Chat) => void = (chat: Chat): void => {
 </script>
 
 <template>
-  <div ref="chatList" class="messenger__chat-list">
+  <div :ref="scroller.itemsList" class="messenger__chat-list">
     <ul>
       <li
         @click="() => openChat(chat)"
-        v-for="chat in items"
+        v-for="chat in scroller.items.value"
         :key="chat.id"
       >
         <span>{{ chat.id }}. {{ chat.users ? chat.users[0].nick : 'No name' }}</span>
@@ -48,7 +42,7 @@ const openChat: (chat: Chat) => void = (chat: Chat): void => {
         <span>{{ chat.last_message?.text }}</span>
       </li>
     </ul>
-    <button v-if="hasError" @click="() => loadItems(true)">
+    <button v-if="scroller.hasError.value" @click="() => scroller.loadItems(true)">
       Reload
     </button>
   </div>

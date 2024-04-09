@@ -10,14 +10,7 @@ const props = defineProps<{
   chatId: number,
 }>();
 
-const {
-  itemsList,
-  items,
-  hasError,
-  loadItems,
-  scrollList,
-  scrollCallback,
-} = useList<Message>({
+const scroller = useList<Message>({
   id: props.chatId,
   direction: Direction.Up,
   getItems: new ChatService().getChatMessages,
@@ -25,17 +18,17 @@ const {
 })
 
 onMounted(() => {
-  const list: Element = itemsList.value as Element;
+  const list: Element = scroller.itemsList.value as Element;
   const before = list.scrollHeight ?? 0;
-  list.addEventListener('scroll', scrollList);
-  loadItems().then(() => scrollCallback(before, 0));
+  list.addEventListener('scroll', scroller.scrollList());
+  scroller.loadItems().then(() => scroller.setScroll(before, 0));
 });
 </script>
 
 <template>
-  <div ref="itemsList" class="messenger__message-list">
+  <div :ref="scroller.itemsList" class="messenger__message-list">
     <div
-      v-for="message in items"
+      v-for="message in scroller.items.value"
       :key="message.id"
       :class="{
           left: message.user_id !== userId,
@@ -46,7 +39,7 @@ onMounted(() => {
       <br>
       <span>{{ message.text }}</span>
     </div>
-    <button v-if="hasError" @click="() => loadItems(true)">
+    <button v-if="scroller.hasError" @click="() => scroller.loadItems(true)">
       Reload
     </button>
   </div>
