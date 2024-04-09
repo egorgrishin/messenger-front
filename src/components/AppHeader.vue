@@ -43,7 +43,7 @@ window.addEventListener('auth', (event: any) => {
 </template>
 
 <style lang="scss" scoped>
-@import "../assets/main";
+@import "../assets/vars";
 @import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 
 header {

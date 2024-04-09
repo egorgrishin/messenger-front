@@ -11,7 +11,7 @@ const password: Ref<string> = ref<string>('');
 const onLogin = async (event: Event): Promise<void> => {
   event.preventDefault();
   if (await new AuthService().login(nick.value, password.value)) {
-    await router.push({ name: 'chat' });
+    await router.push({ name: 'chat.list' });
   }
 }
 </script>

@@ -2,7 +2,7 @@
 import { onMounted, Ref, ref } from "vue";
 import { Chat } from "../interfaces/chat";
 import ChatService from "../services/ChatService";
-import useList from "../composables/list";
+import useList, { Direction } from "../composables/list";
 import router from "../router.config";
 
 const userId: number = +(localStorage.getItem('userId') ?? 0);
@@ -10,14 +10,15 @@ const chatList: Ref<Element | null> = ref(null);
 
 const {
   items,
-  error,
+  hasError,
   loadItems,
   scrollList,
-} = useList<Chat>(
-  userId,
-  new ChatService().getUserChats,
-  (items: Chat[]): number => items[items.length - 1].last_message_id,
-);
+} = useList<Chat>({
+  id: userId,
+  direction: Direction.Down,
+  getItems: new ChatService().getUserChats,
+  getLastId: (items: Chat[]): number => items[items.length - 1].last_message_id ?? 0,
+});
 
 onMounted(() => {
   chatList.value?.addEventListener('scroll', scrollList);
@@ -25,7 +26,6 @@ onMounted(() => {
 loadItems();
 
 const openChat: (chat: Chat) => void = (chat: Chat): void => {
-  console.log(chat.id, typeof chat.id);
   router.push({
     name: 'message.list',
     params: {
@@ -43,19 +43,19 @@ const openChat: (chat: Chat) => void = (chat: Chat): void => {
         v-for="chat in items"
         :key="chat.id"
       >
-        <span>{{ chat.id }}. {{ chat.users[0].nick }}</span>
+        <span>{{ chat.id }}. {{ chat.users ? chat.users[0].nick : 'No name' }}</span>
         <br>
-        <span>{{ chat.last_message.text }}</span>
+        <span>{{ chat.last_message?.text }}</span>
       </li>
     </ul>
-    <button v-if="error" @click="() => loadItems(true)">
+    <button v-if="hasError" @click="() => loadItems(true)">
       Reload
     </button>
   </div>
 </template>
 
 <style scoped lang="scss">
-@import "../assets/main";
+@import "../assets/vars";
 
 .messenger__chat-list {
   overflow-y: auto;

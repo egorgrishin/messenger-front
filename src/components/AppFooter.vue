@@ -16,7 +16,7 @@ const author = 'Гришин Е. А.';
 </template>
 
 <style lang="scss" scoped>
-@import "../assets/main";
+@import "../assets/vars";
 
 footer {
   height: $footer-height;

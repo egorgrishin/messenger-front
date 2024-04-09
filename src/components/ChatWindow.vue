@@ -15,7 +15,7 @@ const chat: ModelRef<Chat | null> = defineModel<Chat | null>('chat');
 </template>
 
 <style scoped lang="scss">
-@import "../assets/main";
+@import "../assets/vars";
 
 .chat__messages-view {
   height: calc(100vh - $header-height - $footer-height);
