@@ -6,18 +6,25 @@ import useList, { Direction } from "../composables/list";
 import router from "../router.config";
 
 const userId: number = +(localStorage.getItem('userId') ?? 0);
-const scroller = useList<Chat>({
-  id: userId,
+const {
+  itemsList,
+  items,
+  lastItemId,
+  loadItems,
+  scrollList,
+} = useList<Chat>({
   direction: Direction.Down,
-  getItems: new ChatService().getUserChats,
-  getLastId: (items: Chat[]): number => items[items.length - 1].last_message_id ?? 0,
+  itemsGetter: (): Promise<Chat[] | null> => new ChatService().getUserChats({
+    userId,
+    startMessageId: lastItemId.value,
+  }),
+  lastIdGetter: (items: Chat[]) => items[items.length - 1].lastMessageId ?? 0,
 });
 
 onMounted(() => {
-  console.log(333, scroller);
-  scroller.itemsList.value?.addEventListener('scroll', scroller.scrollList());
+  itemsList.value?.addEventListener('scroll', scrollList);
 });
-scroller.loadItems();
+loadItems();
 
 const openChat: (chat: Chat) => void = (chat: Chat): void => {
   router.push({
@@ -27,24 +34,34 @@ const openChat: (chat: Chat) => void = (chat: Chat): void => {
     },
   });
 }
+
+window.Echo
+  .private(`users.${userId}.chats`)
+  .listen('.chat.updated', async ({ chatId }: { chatId: number }) => {
+    const updatedChat: Chat | null = await new ChatService().findChat({ chatId });
+    if (!updatedChat) {
+      return;
+    }
+
+    items.value = items.value.filter((chat: Chat) => chat.id != updatedChat.id);
+    items.value.unshift(updatedChat);
+  })
+
 </script>
 
 <template>
-  <div :ref="scroller.itemsList" class="messenger__chat-list">
+  <div ref="itemsList" class="messenger__chat-list">
     <ul>
       <li
         @click="() => openChat(chat)"
-        v-for="chat in scroller.items.value"
+        v-for="chat in items"
         :key="chat.id"
       >
         <span>{{ chat.id }}. {{ chat.users ? chat.users[0].nick : 'No name' }}</span>
         <br>
-        <span>{{ chat.last_message?.text }}</span>
+        <span>{{ chat.lastMessage?.text }}</span>
       </li>
     </ul>
-    <button v-if="scroller.hasError.value" @click="() => scroller.loadItems(true)">
-      Reload
-    </button>
   </div>
 </template>
 

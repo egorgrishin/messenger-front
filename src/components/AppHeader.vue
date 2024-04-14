@@ -36,8 +36,11 @@ window.addEventListener('auth', (event: any) => {
     <div v-else>
       {{ nick }}
       <span @click="onLogout">
-        Выход
+        Logout
       </span>
+      <RouterLink :to="{ name: 'user.search' }">
+        Search
+      </RouterLink>
     </div>
   </header>
 </template>

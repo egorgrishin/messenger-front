@@ -14,7 +14,7 @@ function onRejectedHandler(error: any): any {
 }
 
 const request: AxiosInstance = axios.create({
-    baseURL: 'http://127.0.0.1:8000',
+    baseURL: 'http://127.0.0.1:80',
 });
 request.interceptors.request.use(onFulfilledHandler, onRejectedHandler);
 

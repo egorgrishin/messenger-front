@@ -1,6 +1,6 @@
 import { request } from "../axios.config.ts";
 import { AxiosResponse } from "axios";
-import { User } from "../interfaces/user.ts";
+import { GetUsersResponse, User } from "../interfaces/user.ts";
 
 async function find(userId: number): Promise<AxiosResponse<User>> {
   return request.get(`/api/v1/users/${userId}`)
@@ -19,10 +19,10 @@ async function create(nick: string, password: string): Promise<AxiosResponse> {
     .catch(error => error.response);
 }
 
-async function getUsers(nick: string): Promise<AxiosResponse<User[]>> {
+async function getUsers(nick: string, startId: number | null): Promise<AxiosResponse<GetUsersResponse>> {
   return await request
     .get('/api/v1/users', {
-      data: { nick },
+      params: { nick, startId },
     })
     .then(response => response)
     .catch(error => error.response);

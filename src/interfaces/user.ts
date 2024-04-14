@@ -1,10 +1,15 @@
 interface User {
   id: number,
   nick: string,
-  created_at?: string,
-  updated_at?: string,
+  createdAt: string,
+  updatedAt: string,
+}
+
+interface GetUsersResponse {
+  data: User[],
 }
 
 export type {
   User,
+  GetUsersResponse,
 };
