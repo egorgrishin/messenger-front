@@ -4,7 +4,7 @@ import {
   getUserChats,
   createMessage,
   getChatMessages,
-} from "../api/chat.ts";
+} from "../api/chat";
 import { AxiosResponse } from "axios";
 import {
   Chat,
@@ -15,7 +15,7 @@ import {
   GetUserChatsParams,
   GetUserChatsResponse,
   Message
-} from "../interfaces/chat.ts";
+} from "../interfaces/chat";
 
 export default class ChatService {
   async findChat({ chatId }: FindChatParams): Promise<Chat | null> {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
-import { Chat, Message } from "../interfaces/chat.ts";
-import ChatService from "../services/ChatService.ts";
+import { Chat, Message } from "../interfaces/chat";
+import ChatService from "../services/ChatService";
 import { onMounted, watch } from "vue";
 import useList, { Direction } from "../composables/list";
 

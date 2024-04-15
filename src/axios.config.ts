@@ -1,6 +1,6 @@
 import axios, { InternalAxiosRequestConfig } from "axios";
 import {AxiosInstance} from "axios";
-import AuthService from "./services/AuthService.ts";
+import AuthService from "./services/AuthService";
 
 async function onFulfilledHandler(config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> {
     if (config.url !== '/api/v1/refresh' && await new AuthService().checkAuth()) {

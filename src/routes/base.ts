@@ -1,4 +1,4 @@
-import AuthService from "../services/AuthService.ts";
+import AuthService from "../services/AuthService";
 
 const HomeView = () => import('../views/HomeView.vue');
 

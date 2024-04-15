@@ -1,6 +1,6 @@
 import { Chat, Message } from "../interfaces/chat";
 import { ref, Ref } from "vue";
-import { User } from "../interfaces/user.ts";
+import { User } from "../interfaces/user";
 
 export enum Direction {
   Up = 0,

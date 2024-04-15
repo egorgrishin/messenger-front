@@ -1,6 +1,6 @@
-import { request } from "../axios.config.ts";
+import { request } from "../axios.config";
 import { AxiosResponse } from "axios";
-import { GetUsersResponse, User } from "../interfaces/user.ts";
+import { GetUsersResponse, User } from "../interfaces/user";
 
 async function find(userId: number): Promise<AxiosResponse<User>> {
   return request.get(`/api/v1/users/${userId}`)

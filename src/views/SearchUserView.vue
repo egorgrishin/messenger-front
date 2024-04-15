@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import useList, { Direction } from "../composables/list";
-import UserService from "../services/UserService.ts";
+import UserService from "../services/UserService";
 import { ref, Ref, onMounted } from "vue";
-import { User } from "../interfaces/user.ts";
+import { User } from "../interfaces/user";
 import AppInput from "../components/AppInput.vue";
 import { RouteLocationNormalizedLoaded, Router, useRoute, useRouter } from "vue-router";
-import { Chat } from "../interfaces/chat.ts";
-import ChatService from "../services/ChatService.ts";
+import { Chat } from "../interfaces/chat";
+import ChatService from "../services/ChatService";
 
 const userId: number = +(localStorage.getItem('userId') ?? 0);
 const router: Router = useRouter();

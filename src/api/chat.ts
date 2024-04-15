@@ -1,4 +1,4 @@
-import { request } from "../axios.config.ts";
+import { request } from "../axios.config";
 import { AxiosResponse } from "axios";
 import {
   CreateChatParams,
@@ -11,7 +11,7 @@ import {
   GetChatMessagesResponse,
   GetUserChatsParams,
   GetUserChatsResponse
-} from "../interfaces/chat.ts";
+} from "../interfaces/chat";
 
 async function findChat({ chatId }: FindChatParams): Promise<AxiosResponse<FindChatResponse>> {
   return await request

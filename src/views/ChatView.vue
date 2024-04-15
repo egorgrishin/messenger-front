@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import ChatService from "../services/ChatService.ts";
+import ChatService from "../services/ChatService";
 import { computed, ComputedRef, Ref, ref } from "vue";
-import { Chat, Message } from "../interfaces/chat.ts";
+import { Chat, Message } from "../interfaces/chat";
 import ChatHeader from "../components/ChatHeader.vue";
 import ChatMessageList from "../components/ChatMessageList.vue";
 import ChatInput from "../components/ChatInput.vue";
-import { User } from "../interfaces/user.ts";
+import { User } from "../interfaces/user";
 
 const props = defineProps<{
   chatId: number,

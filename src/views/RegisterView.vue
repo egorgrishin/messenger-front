@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppInput from "../components/AppInput.vue";
 import { ref } from "vue";
-import AuthService from "../services/AuthService.ts";
+import AuthService from "../services/AuthService";
 
 const nick = ref<string>('');
 const password = ref<string>('');

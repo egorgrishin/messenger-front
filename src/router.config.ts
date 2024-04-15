@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory, RouteLocationNormalized, Router } from "vue-router";
-import auth from "./routes/auth.ts";
-import base from "./routes/base.ts";
-import chat from "./routes/chat.ts";
-import user from "./routes/user.ts";
-import AuthService from "./services/AuthService.ts";
+import auth from "./routes/auth";
+import base from "./routes/base";
+import chat from "./routes/chat";
+import user from "./routes/user";
+import AuthService from "./services/AuthService";
 
 const router: Router = createRouter({
   history: createWebHistory(),

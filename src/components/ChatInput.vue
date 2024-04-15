@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, Ref } from "vue";
-import ChatService from "../services/ChatService.ts";
-import { Message } from "../interfaces/chat.ts";
+import ChatService from "../services/ChatService";
+import { Message } from "../interfaces/chat";
 
 const textarea: Ref<HTMLElement | null> = ref(null);
 const text: Ref<string> = ref('');

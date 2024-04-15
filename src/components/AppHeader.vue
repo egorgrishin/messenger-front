@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouteLocationNormalizedLoaded, Router, useRoute, useRouter } from "vue-router";
 import { ref, Ref } from "vue";
-import AuthService from "../services/AuthService.ts";
+import AuthService from "../services/AuthService";
 
 const route: RouteLocationNormalizedLoaded = useRoute();
 const router: Router = useRouter();

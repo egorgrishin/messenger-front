@@ -1,6 +1,6 @@
 import { GetUsersResponse, User } from "../interfaces/user";
 import { AxiosResponse } from "axios";
-import { getUsers } from "../api/user.ts";
+import { getUsers } from "../api/user";
 
 export default class UserService {
   async getUsers(nick: string, startId: number | null = null): Promise<User[] | null> {

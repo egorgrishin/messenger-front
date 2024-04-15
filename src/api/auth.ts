@@ -1,6 +1,6 @@
 import { request } from "../axios.config";
 import { AxiosResponse } from "axios";
-import { LoginResponse } from "../interfaces/auth.ts";
+import { LoginResponse } from "../interfaces/auth";
 
 async function login(nick: string, password: string): Promise<AxiosResponse<LoginResponse>> {
   return await request

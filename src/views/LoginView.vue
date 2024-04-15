@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppInput from "../components/AppInput.vue";
 import { Ref, ref } from "vue";
-import AuthService from "../services/AuthService.ts";
+import AuthService from "../services/AuthService";
 import { Router, useRouter } from "vue-router";
 
 const router: Router = useRouter();

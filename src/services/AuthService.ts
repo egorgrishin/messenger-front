@@ -1,7 +1,7 @@
-import { login, refresh } from "../api/auth.ts";
+import { login, refresh } from "../api/auth";
 import { AxiosResponse } from "axios";
-import { LoginResponse, PayloadAccessToken } from "../interfaces/auth.ts";
-import { create } from "../api/user.ts";
+import { LoginResponse, PayloadAccessToken } from "../interfaces/auth";
+import { create } from "../api/user";
 
 export default class AuthService {
   async login(nick: string, password: string): Promise<boolean> {

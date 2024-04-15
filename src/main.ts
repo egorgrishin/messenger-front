@@ -2,7 +2,7 @@ import './style.scss'
 import App from './App.vue'
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
-import router from "./router.config.ts";
+import router from "./router.config";
 import { createApp } from 'vue'
 
 const accessToken: string | null = localStorage.getItem('accessToken');
