@@ -13,12 +13,14 @@ import AppNotify from "./components/AppNotify.vue";
 
 <style lang="scss">
 #app {
-  margin: 0;
-  color: #212121;
+  width: 100%;
+  max-width: 640px;
+  min-height: 100vh;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   box-sizing: border-box;
-  width: 100%;
+  background: #ffffff;
+  color: #212121;
 }
 </style>

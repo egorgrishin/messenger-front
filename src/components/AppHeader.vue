@@ -52,7 +52,7 @@ header {
   height: $header-height;
   display: flex;
   justify-content: space-between;
-  padding: 0 1rem;
+  padding: 0 1.5rem;
   box-sizing: border-box;
   background: #ffffff;
   align-items: center;

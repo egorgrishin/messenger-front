@@ -14,5 +14,6 @@ import AppFooter from "../components/AppFooter.vue";
 <style lang="scss" scoped>
 main {
   flex-grow: 1;
+  padding: 1rem 1.5rem;
 }
 </style>
