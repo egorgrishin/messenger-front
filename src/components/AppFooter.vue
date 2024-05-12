@@ -25,7 +25,5 @@ footer {
   padding: 1rem;
   justify-content: flex-end;
   box-sizing: border-box;
-  color: #ddd;
-  border-top: 1px solid #1e1e1e;
 }
 </style>

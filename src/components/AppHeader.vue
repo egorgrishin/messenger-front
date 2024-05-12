@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { RouteLocationNormalizedLoaded, Router, useRoute, useRouter } from "vue-router";
+import { Router, useRouter } from "vue-router";
 import { ref, Ref } from "vue";
 import AuthService from "../services/AuthService";
 
-const route: RouteLocationNormalizedLoaded = useRoute();
 const router: Router = useRouter();
 
 const onLogout = async () => {
@@ -21,7 +20,7 @@ window.addEventListener('auth', (event: any) => {
   <header>
     <div class="logo">
       <RouterLink :to="{ name: 'home' }">
-        СМС'ка {{ route.fullPath }}
+        Messenger
       </RouterLink>
     </div>
 
@@ -33,7 +32,7 @@ window.addEventListener('auth', (event: any) => {
         Регистрация
       </RouterLink>
     </div>
-    <div v-else>
+    <div class="links" v-else>
       {{ nick }}
       <span @click="onLogout">
         Logout
@@ -53,24 +52,24 @@ header {
   height: $header-height;
   display: flex;
   justify-content: space-between;
-  padding: 1rem;
+  padding: 0 1rem;
   box-sizing: border-box;
-  background: #333;
+  background: #ffffff;
+  align-items: center;
+
+  a {
+    color: #212121;
+  }
 
   .logo a {
     font-family: 'Raleway', sans-serif;
     font-weight: bold;
-    font-style: italic;
-    color: #eee;
+    font-size: 1.1rem;
   }
 
   .links {
     display: flex;
     gap: 0.75rem;
-
-    a {
-      color: #eee;
-    }
   }
 }
 </style>

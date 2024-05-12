@@ -22,8 +22,7 @@ router.beforeEach(async (to: RouteLocationNormalized): Promise<boolean> => {
   }
 
   const isLogged: boolean = await new AuthService().checkAuth();
-  console.log(isLogged !== ['home', 'login', 'register'].includes(name));
-  return isLogged !== ['home', 'login', 'register'].includes(name);
+  return isLogged !== ['login', 'register'].includes(name);
 });
 
 export default router;

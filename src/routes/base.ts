@@ -7,10 +7,10 @@ export default [
     path: '/',
     name: 'home',
     component: HomeView,
-    beforeEnter: async () => {
+    beforeEnter: async (): Promise<{ name: string }> => {
       return await new AuthService().checkAuth()
-        ? { name: 'chat' }
-        : true;
+        ? { name: 'chat.list' }
+        : { name: 'login' };
     },
   },
 ];
