@@ -2,6 +2,7 @@ import { login, refresh } from "../api/auth";
 import { AxiosResponse } from "axios";
 import { LoginResponse, PayloadAccessToken } from "../interfaces/auth";
 import { create } from "../api/user";
+import Notify from "../composables/notify.ts";
 
 export default class AuthService {
   async login(nick: string, password: string): Promise<boolean> {
@@ -11,7 +12,7 @@ export default class AuthService {
       return true;
     }
 
-    console.log(response);
+    Notify.send('Неправильный логин или пароль');
     return false;
   }
 

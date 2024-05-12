@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import AppLayout from "./layouts/AppLayout.vue";
+import AppNotify from "./components/AppNotify.vue";
 </script>
 
 <template>
   <AppLayout>
     <RouterView />
   </AppLayout>
+
+  <AppNotify />
 </template>
 
 <style lang="scss">
