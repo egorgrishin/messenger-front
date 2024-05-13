@@ -15,14 +15,17 @@ const router: Router = createRouter({
   ],
 });
 
-router.beforeEach(async (to: RouteLocationNormalized): Promise<boolean> => {
+router.beforeEach(async (
+  to: RouteLocationNormalized,
+): Promise<boolean | object> => {
   const name: string | undefined = to.name?.toString();
   if (!name) {
     return false;
   }
-
   const isLogged: boolean = await new AuthService().checkAuth();
-  return isLogged !== ['login', 'register'].includes(name);
+  return name === 'home' || isLogged !== ['login', 'register'].includes(name)
+    ? true
+    : { name: 'home' };
 });
 
 export default router;
