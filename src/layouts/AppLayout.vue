@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import AppHeader from "../components/AppHeader.vue";
-import AppFooter from "../components/AppFooter.vue";
+import AppHeader from "components/AppHeader.vue";
 </script>
 
 <template>
@@ -8,7 +7,6 @@ import AppFooter from "../components/AppFooter.vue";
   <main>
     <slot />
   </main>
-  <AppFooter />
 </template>
 
 <style lang="scss" scoped>

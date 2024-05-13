@@ -94,7 +94,7 @@ const onClick: (user: User) => void = async (user: User): Promise<void> => {
 
 .user__block {
   overflow-y: auto;
-  height: calc(100vh - $header-height - $footer-height - 2rem);
+  height: calc(100vh - $header-height - 2rem);
 
   .search__form {
     display: flex;
