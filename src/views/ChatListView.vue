@@ -86,7 +86,7 @@ const getFirstLetter: (nick: string) => string = (nick: string): string => {
 
 .messenger__chat-list {
   overflow-y: auto;
-  height: calc(100vh - $header-height - $footer-height);
+  height: calc(100vh - $header-height - $footer-height - 2rem);
 
   .messenger__chat-item {
     display: flex;
@@ -101,7 +101,9 @@ const getFirstLetter: (nick: string) => string = (nick: string): string => {
       justify-content: center;
       flex-shrink: 0;
       border-radius: 4rem;
-      background: saddlebrown;
+      background: bisque;
+      font-size: 1.5rem;
+      font-weight: 500;
     }
 
     .messenger__chat-data {

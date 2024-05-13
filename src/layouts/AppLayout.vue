@@ -13,6 +13,7 @@ import AppFooter from "../components/AppFooter.vue";
 
 <style lang="scss" scoped>
 main {
+  position: relative;
   flex-grow: 1;
   padding: 1rem 1.5rem;
 }

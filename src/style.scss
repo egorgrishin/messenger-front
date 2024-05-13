@@ -49,15 +49,39 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  opacity: 0.9;
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+
+.auth__title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  display: block;
+  margin: 0 auto 1rem auto;
+  text-align: center;
+}
+
+.auth__register-link button {
+  width: 100%;
+  margin-top: 0.5rem;
 }
 
 .card {
   padding: 2em;
+}
+
+.auth__block {
+  max-width: 240px;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  .auth__form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem
+  }
 }
 
 @media (prefers-color-scheme: light) {

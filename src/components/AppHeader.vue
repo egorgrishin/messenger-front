@@ -2,12 +2,18 @@
 import { Router, useRouter } from "vue-router";
 import { ref, Ref } from "vue";
 import AuthService from "../services/AuthService";
+import LogoutIcon from 'assets/logout.svg';
+import PlusIcon from 'assets/plus.svg';
 
 const router: Router = useRouter();
 
 const onLogout = async () => {
   new AuthService().logout();
   await router.push({ name: 'home' });
+}
+
+const onSearch = async () => {
+  await router.push({ name: 'user.search' });
 }
 
 const nick: Ref<string | null> = ref(localStorage.getItem('userNick'));
@@ -24,22 +30,16 @@ window.addEventListener('auth', (event: any) => {
       </RouterLink>
     </div>
 
-    <div class="links" v-if="!nick">
-      <RouterLink :to="{ name:'login' }">
-        Вход
-      </RouterLink>
-      <RouterLink :to="{ name: 'register' }">
-        Регистрация
-      </RouterLink>
-    </div>
-    <div class="links" v-else>
-      {{ nick }}
-      <span @click="onLogout">
-        Logout
-      </span>
-      <RouterLink :to="{ name: 'user.search' }">
-        Search
-      </RouterLink>
+    <div class="links" v-if="nick">
+      <div>
+        {{ nick }}
+      </div>
+      <div class="links__icon" @click="onSearch">
+        <img :src="PlusIcon" alt="Найти собеседника" />
+      </div>
+      <div class="links__icon" @click="onLogout">
+        <img :src="LogoutIcon" alt="Выход" />
+      </div>
     </div>
   </header>
 </template>
@@ -70,6 +70,10 @@ header {
   .links {
     display: flex;
     gap: 0.75rem;
+
+    .links__icon {
+      display: flex;
+    }
   }
 }
 </style>
