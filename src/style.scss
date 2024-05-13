@@ -26,6 +26,25 @@ body {
   background: #cccccc;
 }
 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #ddd white;
+}
+
+*::-webkit-scrollbar {
+  width: 0.75rem;
+}
+
+*::-webkit-scrollbar-track {
+  background: white;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 1rem;
+  border: 3px solid white;
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;

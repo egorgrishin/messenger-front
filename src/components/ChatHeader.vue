@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import AppSvgBack from "components/AppSvgBack.vue";
+
 const props = defineProps<{
   title?: string,
 }>();
@@ -6,7 +8,9 @@ const props = defineProps<{
 
 <template>
   <div class="chat__header">
-    <RouterLink :to="{ name: 'chat.list' }">Back</RouterLink>
+    <RouterLink :to="{ name: 'chat.list' }">
+      <AppSvgBack fill="#212121" />
+    </RouterLink>
     <span class="chat__header-title">
       {{ props.title }}
     </span>
@@ -18,9 +22,10 @@ const props = defineProps<{
 
 .chat__header {
   height: $chat-header-height;
-  background: #000;
+  background: #fff;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   flex-shrink: 0;
 }
 </style>

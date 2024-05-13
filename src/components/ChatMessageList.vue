@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { Chat, Message } from "../interfaces/chat";
 import ChatService from "../services/ChatService";
 import { onMounted, watch } from "vue";
@@ -61,12 +60,10 @@ defineExpose({
       v-for="message in items"
       :key="message.id"
       :class="{
-          left: message.userId !== userId,
-          right: message.userId === userId,
-        }"
+        left: message.userId !== userId,
+        right: message.userId === userId,
+      }"
     >
-      <span>{{ chat.users?.filter(user => user.id === message.userId)[0].nick }}</span>
-      <br>
       <span>{{ message.text }}</span>
     </div>
   </div>
@@ -83,22 +80,23 @@ defineExpose({
   overflow-y: auto;
 
   div {
-    white-space: pre;
-    text-wrap: wrap;
+    white-space: pre-wrap;
     text-align: left;
     max-width: 70%;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
   }
 }
 
 .left {
   text-align: left;
-  background: green;
   align-self: flex-start;
 }
 
 .right {
   text-align: right;
-  background: orange;
   align-self: flex-end;
 }
 </style>

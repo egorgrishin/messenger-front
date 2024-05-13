@@ -64,10 +64,14 @@ const onSubmit = async () => {
 textarea {
   width: 100%;
   max-height: 6rem;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
   padding: 0.5rem 0.75rem;
   overflow-y: auto;
   box-sizing: border-box;
   line-height: inherit;
-  border: 1px solid #ccc;
+  color: inherit;
+  outline: none;
 }
 </style>
