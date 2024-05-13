@@ -72,7 +72,7 @@ window.Echo
 @import "../assets/vars";
 
 .test {
-  height: calc(100vh - $header-height - $footer-height);
+  height: calc(100vh - $header-height - $footer-height - 2rem);
   display: flex;
   flex-direction: column;
 }

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { Router, useRouter } from "vue-router";
 import { ref, Ref } from "vue";
-import AuthService from "../services/AuthService";
-import LogoutIcon from 'assets/logout.svg';
-import PlusIcon from 'assets/plus.svg';
+import AuthService from "services/AuthService";
+import AppSvgPlus from "components/AppSvgPlus.vue";
+import AppSvgLogout from "components/AppSvgLogout.vue";
 
 const router: Router = useRouter();
 
@@ -35,10 +35,10 @@ window.addEventListener('auth', (event: any) => {
         {{ nick }}
       </div>
       <div class="links__icon" @click="onSearch">
-        <img :src="PlusIcon" alt="Найти собеседника" />
+        <AppSvgPlus />
       </div>
       <div class="links__icon" @click="onLogout">
-        <img :src="LogoutIcon" alt="Выход" />
+        <AppSvgLogout />
       </div>
     </div>
   </header>
@@ -73,6 +73,7 @@ header {
 
     .links__icon {
       display: flex;
+      align-items: center;
     }
   }
 }

@@ -91,6 +91,11 @@ const getFirstLetter: (nick: string) => string = (nick: string): string => {
   .messenger__chat-item {
     display: flex;
     align-items: center;
+    padding-bottom: 0.75rem;
+
+    &:last-child {
+      padding-bottom: 0;
+    }
 
     .messenger__chat-avatar {
       width: 4rem;
