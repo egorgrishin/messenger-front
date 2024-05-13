@@ -7,6 +7,7 @@ import AppInput from "../components/AppInput.vue";
 import { RouteLocationNormalizedLoaded, Router, useRoute, useRouter } from "vue-router";
 import { Chat } from "../interfaces/chat";
 import ChatService from "../services/ChatService";
+import AppSvgSearch from "components/AppSvgSearch.vue";
 
 const userId: number = +(localStorage.getItem('userId') ?? 0);
 const router: Router = useRouter();
@@ -59,21 +60,31 @@ const onClick: (user: User) => void = async (user: User): Promise<void> => {
 
 <template>
   <div class="user__block" ref="itemsList">
-    <form @submit="onSearch">
-      <AppInput v-model:model="nick" type="text" placeholder="Nick" />
-      <button :disabled="!nick || nick === searchedNick">Search</button>
+    <form class="search__form" @submit="onSearch">
+      <AppInput
+        v-model:model="nick"
+        type="text"
+        placeholder="Имя пользователя"
+      />
+      <button :disabled="!nick || nick === searchedNick">
+        <AppSvgSearch fill="#fff" />
+      </button>
     </form>
 
     <div>
-      <ul>
-        <li
-          v-for="user in items"
-          :key="user.id"
-          @click="() => onClick(user)"
-        >
-          <span>{{ user.id }}. {{ user.nick }}</span>
-        </li>
-      </ul>
+      <div
+        class="user__item"
+        v-for="user in items"
+        :key="user.id"
+        @click="() => onClick(user)"
+      >
+        <div class="messenger__chat-avatar">
+          {{ user.nick[0].toUpperCase() }}
+        </div>
+        <span class="messenger__chat-title">
+          {{ user.nick }}
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -83,6 +94,41 @@ const onClick: (user: User) => void = async (user: User): Promise<void> => {
 
 .user__block {
   overflow-y: auto;
-  height: calc(100vh - $header-height - $footer-height);
+  height: calc(100vh - $header-height - $footer-height - 2rem);
+
+  .search__form {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+
+    input {
+      width: 100%;
+    }
+  }
+
+  .user__item {
+    display: flex;
+    align-items: center;
+    padding-bottom: 0.5rem;
+
+    .messenger__chat-avatar {
+      width: 3rem;
+      height: 3rem;
+      margin-right: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border-radius: 4rem;
+      background: bisque;
+      font-size: 1.25rem;
+      font-weight: 500;
+    }
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+  }
 }
 </style>
