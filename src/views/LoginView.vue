@@ -17,11 +17,17 @@ const onLogin = async (event: Event): Promise<void> => {
 </script>
 
 <template>
-  <form @submit="onLogin">
-    <AppInput v-model:model="nick" type="text" placeholder="Nick" />
-    <AppInput v-model:model="password" type="password" placeholder="Password" />
-    <button>Войти</button>
-  </form>
+  <div class="auth__block">
+    <span class="auth__title">Вход в аккаунт</span>
+    <form class="auth__form" @submit="onLogin">
+      <AppInput v-model:model="nick" type="text" placeholder="Логин" autocomplete />
+      <AppInput v-model:model="password" type="password" placeholder="Пароль" autocomplete />
+      <button>Войти</button>
+    </form>
+    <RouterLink :to="{ name: 'register' }" class="auth__register-link">
+      <button>Создать аккаунт</button>
+    </RouterLink>
+  </div>
 </template>
 
 <style scoped>

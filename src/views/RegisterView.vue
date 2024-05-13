@@ -13,11 +13,17 @@ const onRegister = async (event: Event) => {
 </script>
 
 <template>
-  <form @submit="onRegister">
-    <AppInput v-model:model="nick" type="text" placeholder="Nick" />
-    <AppInput v-model:model="password" type="password" placeholder="Password" />
-    <button>Регистрация</button>
-  </form>
+  <div class="auth__block">
+    <span class="auth__title">Регистрация аккаунта</span>
+    <form class="auth__form" @submit="onRegister">
+      <AppInput v-model:model="nick" type="text" placeholder="Логин" />
+      <AppInput v-model:model="password" type="password" placeholder="Пароль" />
+      <button>Регистрация</button>
+    </form>
+    <RouterLink :to="{ name: 'login' }" class="auth__register-link">
+      <button>Войти</button>
+    </RouterLink>
+  </div>
 </template>
 
 <style scoped>
