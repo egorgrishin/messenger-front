@@ -55,6 +55,23 @@ const getFirstLetter: (nick: string) => string = (nick: string): string => {
   return nick[0];
 }
 
+const getFormattedDate: (datetime: string) => string = (datetime: string): string => {
+  const date = new Date(datetime);
+
+  const monthIndex: number = date.getMonth() + 1;
+  const fullMonth: string = monthIndex < 10 ? '0' + monthIndex : monthIndex.toString();
+
+  const day: number = date.getDate();
+  const fullDay: string = day < 10 ? '0' + day : day.toString();
+
+  const hours: number = date.getHours();
+  const fullHours: string = hours < 10 ? '0' + hours : hours.toString();
+
+  const minutes: number = date.getMinutes();
+  const fullMinutes: string = minutes < 10 ? '0' + minutes : minutes.toString();
+
+  return `${fullDay}.${fullMonth} ${fullHours}:${fullMinutes}`;
+}
 </script>
 
 <template>
@@ -69,12 +86,19 @@ const getFirstLetter: (nick: string) => string = (nick: string): string => {
         {{ getFirstLetter(getChatName(chat)).toUpperCase() }}
       </div>
       <div class="messenger__chat-data">
-        <span class="messenger__chat-title">
-          {{ chat.id }}. {{ getChatName(chat) }}
-        </span>
+        <div class="messenger__chat-header">
+          <span class="messenger__chat-title">
+            {{ chat.id }}. {{ getChatName(chat) }}
+          </span>
+          <span class="messenger__chat-msg-date" v-if="chat.lastMessage">
+            {{ getFormattedDate(chat.lastMessage.createdAt) }}
+          </span>
+        </div>
         <span class="messenger__chat-msg">
-          <span v-if="chat.lastMessage?.userId === userId">Вы: </span>
-          {{ chat.lastMessage?.text }}
+          <span
+            class="messenger__chat-msg-author"
+            v-if="chat.lastMessage?.userId === userId">Вы: </span>
+          {{ chat.lastMessage?.text || 'Сообщений нет' }}
         </span>
       </div>
     </div>
@@ -115,16 +139,27 @@ const getFirstLetter: (nick: string) => string = (nick: string): string => {
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      padding-bottom: 0.25rem;
+      flex-grow: 1;
 
-      .messenger__chat-title {
-        padding-bottom: 0.25rem;
-        font-weight: 500;
+      .messenger__chat-header {
+        display: flex;
+        justify-content: space-between;
+
+        .messenger__chat-title {
+          font-weight: 500;
+        }
       }
 
       .messenger__chat-msg {
+        color: #999999;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+
+        .messenger__chat-msg-author {
+          color: #666;
+        }
       }
     }
   }

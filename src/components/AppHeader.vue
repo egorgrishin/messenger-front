@@ -31,14 +31,14 @@ window.addEventListener('auth', (event: any) => {
     </div>
 
     <div class="links" v-if="nick">
-      <div>
+      <div class="links__nick">
         {{ nick }}
       </div>
       <div class="links__icon" @click="onSearch">
-        <AppSvgPlus />
+        <AppSvgPlus size="1.5rem" />
       </div>
       <div class="links__icon" @click="onLogout">
-        <AppSvgLogout />
+        <AppSvgLogout size="1.5rem" />
       </div>
     </div>
   </header>
@@ -70,6 +70,11 @@ header {
   .links {
     display: flex;
     gap: 0.75rem;
+
+    .links__nick {
+      border-right: 1px solid #999;
+      padding-right: 0.75rem;
+    }
 
     .links__icon {
       display: flex;
