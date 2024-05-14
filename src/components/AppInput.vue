@@ -35,7 +35,7 @@ input {
   padding: 0.5rem 1rem;
   border: 1px solid #ddd;
   color: inherit;
-  border-radius: 0.25rem;
+  border-radius: 0.5rem;
   outline: none;
 }
 

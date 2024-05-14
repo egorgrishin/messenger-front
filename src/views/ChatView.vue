@@ -43,15 +43,11 @@ window.Echo
     }
     console.log("WS", message);
   })
-
 </script>
 
 <template>
   <div class="test">
-    <ChatHeader
-      v-if="chat"
-      :title="title"
-    />
+    <ChatHeader :title="title" />
     <ChatMessageList
       v-if="chat"
       ref="messageList"
@@ -59,10 +55,10 @@ window.Echo
       :userId="userId"
       :inputHeight="inputHeight"
     />
+    <div class="messenger__message-list" v-else />
     <ChatInput
       v-model:height="inputHeight"
       :chatId="props.chatId"
-      :userId="userId"
       @add-message="addMessage"
     />
   </div>
@@ -73,7 +69,13 @@ window.Echo
 
 .test {
   height: calc(100vh - $header-height - 2rem);
+  margin-top: -1rem;
   display: flex;
   flex-direction: column;
+}
+
+.messenger__message-list {
+  display: flex;
+  flex-grow: 1;
 }
 </style>

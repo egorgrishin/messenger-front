@@ -35,10 +35,10 @@ window.addEventListener('auth', (event: any) => {
         {{ nick }}
       </div>
       <div class="links__icon" @click="onSearch">
-        <AppSvgPlus size="1.5rem" />
+        <AppSvgPlus fill="#373737" size="1.35rem" />
       </div>
       <div class="links__icon" @click="onLogout">
-        <AppSvgLogout size="1.5rem" />
+        <AppSvgLogout fill="#373737" size="1.35rem" />
       </div>
     </div>
   </header>
@@ -70,6 +70,7 @@ header {
   .links {
     display: flex;
     gap: 0.75rem;
+    align-items: center;
 
     .links__nick {
       border-right: 1px solid #999;
@@ -77,8 +78,7 @@ header {
     }
 
     .links__icon {
-      display: flex;
-      align-items: center;
+      cursor: pointer;
     }
   }
 }

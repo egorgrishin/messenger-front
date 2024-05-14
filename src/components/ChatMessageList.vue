@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Chat, Message } from "../interfaces/chat";
 import ChatService from "../services/ChatService";
-import { onMounted, watch } from "vue";
+import { nextTick, onMounted, watch } from "vue";
 import useList, { Direction } from "../composables/list";
 
 const props = defineProps<{
@@ -30,7 +30,9 @@ onMounted(() => {
   const list: Element = itemsList.value as Element;
   const before = list.scrollHeight ?? 0;
   list.addEventListener('scroll', scrollList);
-  loadItems().then(() => setScroll(before, 0));
+  loadItems().then(() => {
+    nextTick().then(() => setScroll(before, 0));
+  });
 });
 
 watch(() => props.inputHeight, (value: number, oldValue: number) => {
@@ -47,6 +49,11 @@ watch(() => props.inputHeight, (value: number, oldValue: number) => {
 
 const addMessage: (message: Message) => void = (message: Message): void => {
   items.value.push(message);
+  const list: HTMLElement = itemsList.value as HTMLElement;
+  const scrollHeight: number = list.clientHeight + list.scrollTop;
+  if (scrollHeight === list.scrollHeight) {
+    nextTick().then(() => setScroll(0, 0));
+  }
 }
 
 defineExpose({

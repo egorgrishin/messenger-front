@@ -4,18 +4,22 @@ interface Props {
   border?: string,
   color?: string,
   fontWeight?: number,
+  padding?: string,
+  disabled?: boolean,
 }
 
 const props = withDefaults(defineProps<Props>(), {
   border: (props) => '1px solid ' + props.bg,
   fontWeight: 500,
+  padding: '0.6em 1.2em',
 });
 </script>
 
 <template>
   <button :style="{
-    background: props.bg,
+    padding: padding,
     border: props.border ?? '1px solid ' + bg,
+    background: props.bg,
     color: props.color,
     fontWeight: props.fontWeight,
   }">
@@ -26,7 +30,6 @@ const props = withDefaults(defineProps<Props>(), {
 <style scoped lang="scss">
 button {
   border-radius: 8px;
-  padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;

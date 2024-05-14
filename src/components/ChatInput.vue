@@ -2,6 +2,8 @@
 import { onMounted, ref, Ref } from "vue";
 import ChatService from "../services/ChatService";
 import { Message } from "../interfaces/chat";
+import AppSvgSend from "components/AppSvgSend.vue";
+import AppButton from "components/AppButton.vue";
 
 const textarea: Ref<HTMLElement | null> = ref(null);
 const text: Ref<string> = ref('');
@@ -28,11 +30,13 @@ const onInput = () => {
 }
 onMounted(onInput);
 
-const onSubmit = async () => {
+const onSubmit = () => {
   const message = text.value.trim();
   if (!message) {
     return
   }
+
+  text.value = '';
   new ChatService().createMessage({
     chatId: props.chatId,
     text: message,
@@ -41,9 +45,8 @@ const onSubmit = async () => {
       alert("Not send");
       return;
     }
-    emit('addMessage', message)
+    emit('addMessage', message);
   });
-  text.value = '';
 }
 </script>
 
@@ -57,21 +60,31 @@ const onSubmit = async () => {
       @keyup.enter.exact="onSubmit"
       rows="1"
     ></textarea>
+    <AppButton @click="onSubmit" padding="0 0.6rem" bg="#212121">
+      <AppSvgSend size="1.35rem" />
+    </AppButton>
   </div>
 </template>
 
 <style scoped lang="scss">
-textarea {
-  width: 100%;
-  max-height: 6rem;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  overflow-y: auto;
-  box-sizing: border-box;
-  line-height: inherit;
-  color: inherit;
-  outline: none;
+div {
+  display: flex;
+  gap: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #ddd;
+
+  textarea {
+    width: 100%;
+    max-height: 6rem;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    overflow-y: auto;
+    box-sizing: border-box;
+    line-height: inherit;
+    color: inherit;
+    outline: none;
+  }
 }
 </style>

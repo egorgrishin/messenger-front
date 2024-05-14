@@ -9,7 +9,7 @@ const props = defineProps<{
 <template>
   <div class="chat__header">
     <RouterLink :to="{ name: 'chat.list' }">
-      <AppSvgBack fill="#212121" />
+      <AppSvgBack size="1.1rem" fill="#212121" />
     </RouterLink>
     <span class="chat__header-title">
       {{ props.title }}

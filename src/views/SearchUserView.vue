@@ -8,12 +8,12 @@ import { RouteLocationNormalizedLoaded, Router, useRoute, useRouter } from "vue-
 import { Chat } from "../interfaces/chat";
 import ChatService from "../services/ChatService";
 import AppSvgSearch from "components/AppSvgSearch.vue";
+import AppButton from "components/AppButton.vue";
 
 const userId: number = +(localStorage.getItem('userId') ?? 0);
 const router: Router = useRouter();
 const route: RouteLocationNormalizedLoaded = useRoute();
 const nick: Ref<string> = ref(route.query.q?.toString() ?? '');
-const searchedNick: Ref<string> = ref('');
 const {
   itemsList,
   items,
@@ -34,7 +34,6 @@ onMounted(() => {
 const onSearch: (event: Event) => void = (event: Event): void => {
   event.preventDefault();
   reset();
-  searchedNick.value = nick.value;
   loadItems();
   router.replace({ query: { q: nick.value } });
 }
@@ -60,15 +59,16 @@ const onClick: (user: User) => void = async (user: User): Promise<void> => {
 
 <template>
   <div class="user__block" ref="itemsList">
+    <h2>Поиск пользователей</h2>
     <form class="search__form" @submit="onSearch">
       <AppInput
         v-model:model="nick"
         type="text"
         placeholder="Имя пользователя"
       />
-      <button :disabled="!nick || nick === searchedNick">
+      <AppButton bg="#212121" padding="0 0.75rem">
         <AppSvgSearch fill="#fff" />
-      </button>
+      </AppButton>
     </form>
 
     <div>
@@ -95,6 +95,11 @@ const onClick: (user: User) => void = async (user: User): Promise<void> => {
 .user__block {
   overflow-y: auto;
   height: calc(100vh - $header-height - 2rem);
+  margin-top: -0.5rem;
+
+  h2 {
+    margin: 0 0 0.5rem;
+  }
 
   .search__form {
     display: flex;
