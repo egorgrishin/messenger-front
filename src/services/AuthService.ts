@@ -43,7 +43,7 @@ export default class AuthService {
       return true;
     }
 
-    console.log(response);
+    this.logout();
     return false;
   }
 
