@@ -21,13 +21,13 @@ export default class Notify {
    */
   static send: (text: string) => void = (text: string): void => {
     Notify.text.value = text;
-    setTimeout(Notify.#clear, Notify.DISPLAY_TIME);
+    setTimeout(Notify.clear, Notify.DISPLAY_TIME);
   }
 
   /**
    * Очищает содержимое уведомления
    */
-  static #clear: () => void = (): void => {
+  private static clear: () => void = (): void => {
     Notify.text.value = null;
   }
 }

@@ -36,5 +36,9 @@ import Notify from "../composables/notify";
   background: #D0342C;
   padding: 0.5rem 1rem;
   border-radius: 4px;
+
+  span {
+    color: #fff;
+  }
 }
 </style>
