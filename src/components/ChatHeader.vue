@@ -7,25 +7,24 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="chat__header">
+  <div class="chat-header">
     <RouterLink :to="{ name: 'chat.list' }">
       <AppSvgBack size="1.1rem" fill="#212121" />
     </RouterLink>
-    <span class="chat__header-title">
-      {{ props.title }}
-    </span>
+
+    <span>{{ props.title }}</span>
   </div>
 </template>
 
 <style scoped lang="scss">
-@import "../assets/vars";
+@import "assets/vars";
 
-.chat__header {
+.chat-header {
   height: $chat-header-height;
-  background: #fff;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
+  background: #fff;
 }
 </style>

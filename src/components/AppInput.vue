@@ -1,17 +1,15 @@
 <script setup lang="ts">
 interface Props {
-  type: 'text' | 'password',
-  placeholder: string,
-  autocomplete?: boolean,
-  required?: boolean,
-  minlength?: number,
-  maxlength?: number,
+  type: 'text' | 'password';
+  placeholder: string;
+  autocomplete?: boolean;
+  required?: boolean;
+  minlength?: number;
+  maxlength?: number;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  required: true,
-});
-const model = defineModel('model', {
+const props = defineProps<Props>();
+const model = defineModel<string>('model', {
   required: true,
 });
 </script>
@@ -37,6 +35,11 @@ input {
   color: inherit;
   border-radius: 0.5rem;
   outline: none;
+  transition: 0.1s;
+}
+
+input:hover {
+  border: 1px solid #e9e9e9;
 }
 
 input:-webkit-autofill,
@@ -46,6 +49,8 @@ input:-webkit-autofill:active {
   box-shadow: inset 0 0 0 3rem #fff;
   -webkit-text-fill-color: #212121 !important;
 }
-input:-webkit-autofill::first-line {font-size: 16px}
 
+input:-webkit-autofill::first-line {
+  font-size: 16px
+}
 </style>

@@ -1,20 +1,21 @@
 <script setup lang="ts">
-import { onMounted, ref, Ref } from "vue";
-import ChatService from "../services/ChatService";
-import { Message } from "../interfaces/chat";
+import { ModelRef, nextTick, onMounted, ref, Ref } from "vue";
+import ChatService from "services/ChatService";
+import { Message } from "interfaces/chat";
 import AppSvgSend from "components/AppSvgSend.vue";
 import AppButton from "components/AppButton.vue";
 
-const textarea: Ref<HTMLElement | null> = ref(null);
+const textarea: Ref<HTMLTextAreaElement | null> = ref(null);
 const text: Ref<string> = ref('');
 const borderSize: number = 1;
 const borders: number = borderSize * 2;
-const height = defineModel('height', {
+
+const height: ModelRef<number> = defineModel<number>('height', {
   required: true,
 });
 const props = defineProps<{
   chatId: number,
-}>()
+}>();
 const emit = defineEmits<{
   (e: 'addMessage', message: Message): void
 }>()
@@ -37,6 +38,7 @@ const onSubmit = () => {
   }
 
   text.value = '';
+  nextTick(onInput);
   new ChatService().createMessage({
     chatId: props.chatId,
     text: message,
@@ -85,6 +87,11 @@ div {
     line-height: inherit;
     color: inherit;
     outline: none;
+    transition: 0.1s;
+  }
+
+  textarea:hover {
+    border: 1px solid #e9e9e9;
   }
 }
 </style>

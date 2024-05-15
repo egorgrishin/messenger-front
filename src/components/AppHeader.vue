@@ -9,7 +9,7 @@ const router: Router = useRouter();
 
 const onLogout = async () => {
   new AuthService().logout();
-  await router.push({ name: 'home' });
+  await router.push({ name: 'login' });
 }
 
 const onSearch = async () => {
@@ -24,20 +24,18 @@ window.addEventListener('auth', (event: any) => {
 
 <template>
   <header>
-    <div class="logo">
-      <RouterLink :to="{ name: 'home' }">
-        Messenger
-      </RouterLink>
-    </div>
+    <RouterLink class="logo" :to="{ name: 'home' }">
+      Messenger
+    </RouterLink>
 
-    <div class="links" v-if="nick">
-      <div class="links__nick">
+    <div class="menu" v-if="nick">
+      <div class="menu__nick">
         {{ nick }}
       </div>
-      <div class="links__icon" @click="onSearch">
+      <div class="menu__icon" @click="onSearch">
         <AppSvgPlus fill="#373737" size="1.35rem" />
       </div>
-      <div class="links__icon" @click="onLogout">
+      <div class="menu__icon" @click="onLogout">
         <AppSvgLogout fill="#373737" size="1.35rem" />
       </div>
     </div>
@@ -46,7 +44,7 @@ window.addEventListener('auth', (event: any) => {
 
 <style lang="scss" scoped>
 @import "../assets/vars";
-@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap');
 
 header {
   height: $header-height;
@@ -54,32 +52,27 @@ header {
   justify-content: space-between;
   padding: 0 1.5rem;
   box-sizing: border-box;
-  background: #ffffff;
+  background: #fff;
   align-items: center;
+}
 
-  a {
-    color: #212121;
+.logo {
+  color: #212121;
+  font: bold 1.1rem 'Raleway', sans-serif;
+}
+
+.menu {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+
+  &__nick {
+    padding-right: 0.75rem;
+    border-right: 1px solid #999;
   }
 
-  .logo a {
-    font-family: 'Raleway', sans-serif;
-    font-weight: bold;
-    font-size: 1.1rem;
-  }
-
-  .links {
-    display: flex;
-    gap: 0.75rem;
-    align-items: center;
-
-    .links__nick {
-      border-right: 1px solid #999;
-      padding-right: 0.75rem;
-    }
-
-    .links__icon {
-      cursor: pointer;
-    }
+  &__icon {
+    cursor: pointer;
   }
 }
 </style>
