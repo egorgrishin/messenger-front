@@ -2,7 +2,7 @@
 import AppButton from "components/AppButton.vue";
 import AppInput from "components/AppInput.vue";
 import { ref } from "vue";
-import { login } from "services/AuthService";
+import { login } from "services/authService.ts";
 import { useRouter } from "vue-router";
 
 const router = useRouter();

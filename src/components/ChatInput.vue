@@ -2,7 +2,7 @@
 import AppButton from "components/AppButton.vue";
 import AppSvgSend from "components/AppIconSend.vue";
 import { Message } from "interfaces/chat";
-import { createMessage } from "services/ChatService";
+import { createMessage } from "services/chatService.ts";
 import { nextTick, onMounted, ref } from "vue";
 
 // Высота textarea

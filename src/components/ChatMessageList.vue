@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Direction, useList } from "composables/list";
 import { Chat, Message } from "interfaces/chat";
-import { getChatMessages } from "services/ChatService";
+import { getChatMessages } from "services/chatService.ts";
 import { nextTick, watch } from "vue";
 
 const props = defineProps<{

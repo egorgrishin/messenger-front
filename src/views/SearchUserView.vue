@@ -5,8 +5,8 @@ import AppInput from "components/AppInput.vue";
 import { useList } from "composables/list";
 import { Chat } from "interfaces/chat";
 import { User } from "interfaces/user";
-import { createChat } from "services/ChatService";
-import { getUsers } from "services/UserService";
+import { createChat } from "services/chatService.ts";
+import { getUsers } from "services/userService.ts";
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 

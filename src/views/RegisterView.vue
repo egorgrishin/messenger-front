@@ -1,15 +1,32 @@
 <script setup lang="ts">
 import AppButton from "components/AppButton.vue";
 import AppInput from "components/AppInput.vue";
-import { createUser } from "services/UserService.ts";
+import { createUser } from "services/userService.ts";
 import { ref } from "vue";
+import Notify from "composables/notify.ts";
+import { login } from "services/authService.ts";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const nick = ref<string>('');
 const password = ref<string>('');
 
+/**
+ * Регистрация ноового пользователя.
+ * В случае успеха сразу происходит авторизация и перенеправление на список чатов
+ */
 const onRegister = async (event: Event): Promise<void> => {
   event.preventDefault();
-  await createUser(nick.value, password.value);
+  if (!await createUser(nick.value, password.value)) {
+    Notify.send('Ошибка решистрации');
+    return;
+  }
+
+  if (await login(nick.value, password.value)) {
+    await router.push({ name: 'chat.list' });
+  } else {
+    await router.push({ name: 'login' });
+  }
 }
 </script>
 

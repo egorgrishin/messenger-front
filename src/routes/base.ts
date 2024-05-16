@@ -1,4 +1,4 @@
-import { checkAuth } from "services/AuthService";
+import { checkAuth } from "services/authService.ts";
 
 export default [
   {

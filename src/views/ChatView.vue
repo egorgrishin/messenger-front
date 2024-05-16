@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { findChat } from "services/ChatService";
-import { computed, ref } from "vue";
+import { getEcho } from "@/helper";
+import { findChat } from "services/chatService.ts";
+import { computed, onUnmounted, ref } from "vue";
 import { Chat, Message } from "interfaces/chat";
 import ChatHeader from "components/ChatHeader.vue";
 import ChatMessageList from "components/ChatMessageList.vue";
@@ -42,7 +43,7 @@ const addMessage = (message: Message): void => {
   messageList.value?.addMessage(message);
 }
 
-window.Echo
+getEcho()
   .private(`chats.${props.chatId}`)
   .listen('.message.new', (message: Message) => {
     // Добавляем сообщение в чат, если оно пришло от собеседника
@@ -50,6 +51,7 @@ window.Echo
       addMessage(message);
     }
   });
+onUnmounted(() => window.Echo.leave(`chats.${props.chatId}`));
 </script>
 
 <template>

@@ -24,6 +24,6 @@ export async function apiCreateUser(nick: string, password: string): Promise<Axi
       password,
       password_confirmation: password,
     })
-    .then((response: AxiosResponse<any>) => response)
+    .then((response: AxiosResponse) => response)
     .catch((error: any) => error.response);
 }

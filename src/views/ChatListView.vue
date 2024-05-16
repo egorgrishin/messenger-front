@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import router from "@/router.config";
+import { getEcho } from "@/helper";
 import { useList } from "composables/list";
 import { Chat } from "interfaces/chat";
 import { User } from "interfaces/user.ts";
-import { getUserChats } from "services/ChatService";
+import { getUserChats } from "services/chatService.ts";
+import { onUnmounted } from "vue";
 
 // ID текущего пользователя
 const userId: number = +(localStorage.getItem('userId') || 0);
@@ -54,12 +56,13 @@ const getFormattedDate: (datetime: string) => string = (datetime: string): strin
   return `${day}.${month} ${hours}:${minutes}`;
 };
 
-window.Echo
+getEcho()
   .private(`users.${userId}.chats`)
   .listen('.chat.updated', async (updatedChat: Chat) => {
     items.value = items.value.filter((chat: Chat) => chat.id != updatedChat.id);
     items.value.unshift(updatedChat);
   });
+onUnmounted(() => window.Echo.leave(`users.${userId}.chats`));
 </script>
 
 <template>

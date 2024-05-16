@@ -3,7 +3,7 @@ import auth from "routes/auth";
 import base from "routes/base";
 import chat from "routes/chat";
 import user from "routes/user";
-import { checkAuth } from "services/AuthService";
+import { checkAuth } from "services/authService.ts";
 
 const router: Router = createRouter({
   history: createWebHistory(),
