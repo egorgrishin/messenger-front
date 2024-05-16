@@ -7,8 +7,8 @@ import { createApp } from 'vue'
 
 const accessToken: string | null = localStorage.getItem('accessToken');
 
-(window as any).Pusher = Pusher;
-(window as any).Echo = new Echo({
+window.Pusher = Pusher;
+window.Echo = new Echo({
   broadcaster: 'reverb',
   key: 'yp5s26tdak7lb7zeb3ic',
   wsHost: '127.0.0.1',

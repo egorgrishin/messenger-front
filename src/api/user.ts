@@ -1,35 +1,29 @@
-import { request } from "../axios.config";
+import { request } from "@/axios.config";
 import { AxiosResponse } from "axios";
-import { GetUsersResponse, User } from "../interfaces/user";
+import { AxiosGetUsers } from "interfaces/user";
 
-async function find(userId: number): Promise<AxiosResponse<User>> {
-  return request.get(`/api/v1/users/${userId}`)
-    .then(response => response)
-    .catch(error => error.response);
+/**
+ * Отправляет GET запрос на получение списка пользователей с фильтрацией по нику и ID меньше указанного
+ */
+export async function apiGetUsers(nick: string, startId: number | null): Promise<AxiosGetUsers> {
+  return await request
+    .get('/api/v1/users', {
+      params: { nick, startId },
+    })
+    .then((response: AxiosGetUsers) => response)
+    .catch((error: any) => error.response);
 }
 
-async function create(nick: string, password: string): Promise<AxiosResponse> {
+/**
+ * Отправляет POST запрос на создание нового пользователя
+ */
+export async function apiCreateUser(nick: string, password: string): Promise<AxiosResponse> {
   return await request
     .post('/api/v1/users', {
       nick,
       password,
       password_confirmation: password,
     })
-    .then(response => response)
-    .catch(error => error.response);
-}
-
-async function getUsers(nick: string, startId: number | null): Promise<AxiosResponse<GetUsersResponse>> {
-  return await request
-    .get('/api/v1/users', {
-      params: { nick, startId },
-    })
-    .then(response => response)
-    .catch(error => error.response);
-}
-
-export {
-  find,
-  create,
-  getUsers,
+    .then((response: AxiosResponse<any>) => response)
+    .catch((error: any) => error.response);
 }

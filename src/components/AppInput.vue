@@ -42,6 +42,7 @@ input:hover {
   border: 1px solid #e9e9e9;
 }
 
+// Убирает подсветку автоматически заполненных полей браузерами
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,

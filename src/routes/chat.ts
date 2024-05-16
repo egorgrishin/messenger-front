@@ -1,7 +1,7 @@
 import { RouteLocationNormalized } from "vue-router";
 
-const ChatListView = () => import('../views/ChatListView.vue');
-const MessageListView = () => import('../views/ChatView.vue');
+const ChatListView = () => import('views/ChatListView.vue');
+const MessageListView = () => import('views/ChatView.vue');
 
 function propsParse(props: { [key: string]: (value: any) => any }) {
   console.log(props)

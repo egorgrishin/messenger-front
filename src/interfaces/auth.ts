@@ -1,15 +1,14 @@
-interface LoginResponse {
-  accessToken: string,
-  refreshToken: string,
-}
+import { AxiosResponse } from "axios";
 
-interface PayloadAccessToken {
+export interface PayloadAccessToken {
   id: number,
   nick: string,
   exp: number,
 }
 
-export type {
-  LoginResponse,
-  PayloadAccessToken,
-};
+export interface LoginResponse {
+  accessToken: string,
+  refreshToken: string,
+}
+
+export type AxiosLogin = AxiosResponse<LoginResponse>;

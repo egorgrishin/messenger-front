@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppSvgBack from "components/AppSvgBack.vue";
+import AppSvgBack from "components/AppIconBack.vue";
 
 const props = defineProps<{
   title?: string,
@@ -7,7 +7,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="chat-header">
+  <div class="chat__header">
     <RouterLink :to="{ name: 'chat.list' }">
       <AppSvgBack size="1.1rem" fill="#212121" />
     </RouterLink>
@@ -19,7 +19,7 @@ const props = defineProps<{
 <style scoped lang="scss">
 @import "assets/vars";
 
-.chat-header {
+.chat__header {
   height: $chat-header-height;
   display: flex;
   align-items: center;

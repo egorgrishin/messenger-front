@@ -1,6 +1,7 @@
 import { User } from "./user";
+import { AxiosResponse } from "axios";
 
-interface Message {
+export interface Message {
   id: number,
   chatId: number,
   userId: number,
@@ -8,7 +9,7 @@ interface Message {
   createdAt: string
 }
 
-interface Chat {
+export interface Chat {
   id: number,
   title?: string,
   isDialog: boolean,
@@ -17,63 +18,8 @@ interface Chat {
   users?: User[],
 }
 
-// API
-interface FindChatParams {
-  chatId: number,
-}
-
-interface CreateChatParams {
-  title?: string,
-  isDialog: boolean,
-  users?: number[],
-}
-
-interface GetUserChatsParams {
-  userId: number,
-  startMessageId?: number | null,
-}
-
-interface CreateMessageParams {
-  chatId: number,
-  text: string,
-}
-
-interface GetChatMessagesParams {
-  chatId: number,
-  startId?: number | null,
-}
-
-interface FindChatResponse {
-  data: Chat,
-}
-
-interface CreateChatResponse {
-  data: Chat,
-}
-
-interface GetUserChatsResponse {
-  data: Chat[],
-}
-
-interface CreateMessageResponse {
-  data: Message,
-}
-
-interface GetChatMessagesResponse {
-  data: Message[],
-}
-
-export type {
-  Message,
-  Chat,
-  FindChatParams,
-  CreateChatParams,
-  GetUserChatsParams,
-  CreateMessageParams,
-  GetChatMessagesParams,
-  FindChatResponse,
-  CreateChatResponse,
-  GetUserChatsResponse,
-  CreateMessageResponse,
-  GetChatMessagesResponse,
-};
+export type AxiosFindChat = AxiosResponse<{ data: Chat }>;
+export type AxiosCreateChat = AxiosResponse<{ data: Chat }>;
+export type AxiosGetUserChats = AxiosResponse<{ data: Chat[] }>;
+export type AxiosCreateMessage = AxiosResponse<{ data: Message }>;
+export type AxiosGetChatMessages = AxiosResponse<{ data: Message[] }>;

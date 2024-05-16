@@ -1,36 +1,43 @@
 <script setup lang="ts">
-import ChatService from "../services/ChatService";
-import { computed, ComputedRef, Ref, ref } from "vue";
-import { Chat, Message } from "../interfaces/chat";
-import ChatHeader from "../components/ChatHeader.vue";
-import ChatMessageList from "../components/ChatMessageList.vue";
-import ChatInput from "../components/ChatInput.vue";
-import { User } from "../interfaces/user";
+import { findChat } from "services/ChatService";
+import { computed, ref } from "vue";
+import { Chat, Message } from "interfaces/chat";
+import ChatHeader from "components/ChatHeader.vue";
+import ChatMessageList from "components/ChatMessageList.vue";
+import ChatInput from "components/ChatInput.vue";
+import { User } from "interfaces/user";
 
+// ID текущего пользователя
+const userId: number = +(localStorage.getItem('userId') || 0);
 const props = defineProps<{
   chatId: number,
 }>();
 const messageList = ref<InstanceType<typeof ChatMessageList> | null>(null);
-const inputHeight: Ref<number> = ref(0);
-const chat: Ref<Chat | null> = ref(null);
-const userId: number = +(localStorage.getItem('userId') ?? 0);
-const interlocutor: ComputedRef<User | null> = computed(() => {
+const inputHeight = ref<number>(0);
+const chat = ref<Chat | null>(null);
+
+// Собеседник
+const interlocutor = computed<User | null>(() => {
   return chat.value
     ?.users
     ?.filter((user: User) => user.id !== userId)[0] ?? null;
 })
 
-const title: ComputedRef<string | undefined> = computed(() => {
+// Название чата
+// Если это диалог, то название - имя собеседника, иначе - chat.title
+const title = computed<string | undefined>(() => {
   return chat.value?.isDialog
     ? interlocutor.value?.nick
     : chat.value?.title ?? undefined;
 })
 
-const loadChat: () => void = async () => {
-  chat.value = await new ChatService().findChat({ chatId: props.chatId })
+// Загружает чат
+const loadChat = async () => {
+  chat.value = await findChat(props.chatId)
 };
 loadChat();
 
+// Добавляет сообщение в чат
 const addMessage = (message: Message): void => {
   messageList.value?.addMessage(message);
 }
@@ -38,15 +45,15 @@ const addMessage = (message: Message): void => {
 window.Echo
   .private(`chats.${props.chatId}`)
   .listen('.message.new', (message: Message) => {
+    // Добавляем сообщение в чат, если оно пришло от собеседника
     if (message.userId !== userId) {
-      messageList.value?.addMessage(message);
+      addMessage(message);
     }
-    console.log("WS", message);
-  })
+  });
 </script>
 
 <template>
-  <div class="test">
+  <div class="chat">
     <ChatHeader :title="title" />
     <ChatMessageList
       v-if="chat"
@@ -55,7 +62,7 @@ window.Echo
       :userId="userId"
       :inputHeight="inputHeight"
     />
-    <div class="messenger__message-list" v-else />
+    <div class="chat__messages-list" v-else />
     <ChatInput
       v-model:height="inputHeight"
       :chatId="props.chatId"
@@ -65,17 +72,17 @@ window.Echo
 </template>
 
 <style scoped lang="scss">
-@import "../assets/vars";
+@import "assets/vars";
 
-.test {
-  height: calc(100vh - $header-height - 2rem);
+.chat {
+  height: calc(100vh - $header-height - 1rem);
   margin-top: -1rem;
   display: flex;
   flex-direction: column;
-}
 
-.messenger__message-list {
-  display: flex;
-  flex-grow: 1;
+  &__message-list {
+    display: flex;
+    flex-grow: 1;
+  }
 }
 </style>

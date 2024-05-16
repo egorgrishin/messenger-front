@@ -1,16 +1,12 @@
 <script setup lang="ts">
-import { ModelRef, nextTick, onMounted, ref, Ref } from "vue";
-import ChatService from "services/ChatService";
-import { Message } from "interfaces/chat";
-import AppSvgSend from "components/AppSvgSend.vue";
 import AppButton from "components/AppButton.vue";
+import AppSvgSend from "components/AppIconSend.vue";
+import { Message } from "interfaces/chat";
+import { createMessage } from "services/ChatService";
+import { nextTick, onMounted, ref } from "vue";
 
-const textarea: Ref<HTMLTextAreaElement | null> = ref(null);
-const text: Ref<string> = ref('');
-const borderSize: number = 1;
-const borders: number = borderSize * 2;
-
-const height: ModelRef<number> = defineModel<number>('height', {
+// Высота textarea
+const height = defineModel<number>('height', {
   required: true,
 });
 const props = defineProps<{
@@ -18,42 +14,51 @@ const props = defineProps<{
 }>();
 const emit = defineEmits<{
   (e: 'addMessage', message: Message): void
-}>()
+}>();
 
+const textarea = ref<HTMLTextAreaElement | null>(null);
+const text = ref<string>('');
+
+// Толщина границы textarea
+const border: number = 1;
+const borderStyle: string = border + 'px';
+
+/**
+ * Изменяет высоту textarea в записимости от текста
+ */
 const onInput = () => {
   if (!textarea.value) {
     return;
   }
   textarea.value.style.height = 'auto';
-  const heightPx = textarea.value.scrollHeight + borders;
+  const heightPx = textarea.value.scrollHeight + border * 2;
   textarea.value.style.height = `${heightPx}px`;
-  height.value = heightPx;
+  height.value = textarea.value.offsetHeight;
 }
 onMounted(onInput);
 
+/**
+ * Отвправляет сообщение
+ */
 const onSubmit = () => {
   const message = text.value.trim();
   if (!message) {
-    return
+    return;
   }
 
+  // Вызываем функцию onInput, чтобы сбросить размер textarea до исходного
   text.value = '';
   nextTick(onInput);
-  new ChatService().createMessage({
-    chatId: props.chatId,
-    text: message,
-  }).then((message: Message | null) => {
-    if (!message) {
-      alert("Not send");
-      return;
+  createMessage(props.chatId, message).then((message: Message | null) => {
+    if (message) {
+      emit('addMessage', message);
     }
-    emit('addMessage', message);
   });
 }
 </script>
 
 <template>
-  <div>
+  <div class="chat__input">
     <textarea
       ref="textarea"
       v-model="text"
@@ -62,36 +67,37 @@ const onSubmit = () => {
       @keyup.enter.exact="onSubmit"
       rows="1"
     ></textarea>
+
     <AppButton @click="onSubmit" padding="0 0.6rem" bg="#212121">
-      <AppSvgSend size="1.35rem" />
+      <AppSvgSend size="1.35rem" fill="#fff" />
     </AppButton>
   </div>
 </template>
 
 <style scoped lang="scss">
-div {
+.chat__input {
+  padding-top: 0.5rem;
   display: flex;
   gap: 1rem;
-  padding-top: 0.5rem;
   border-top: 1px solid #ddd;
 
   textarea {
     width: 100%;
     max-height: 6rem;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 0.5rem;
     padding: 0.5rem 0.75rem;
-    overflow-y: auto;
     box-sizing: border-box;
-    line-height: inherit;
+    border: v-bind(borderStyle) solid #ddd;
+    border-radius: 0.5rem;
+    overflow-y: auto;
+    background: #fff;
     color: inherit;
+    line-height: inherit;
     outline: none;
     transition: 0.1s;
   }
 
   textarea:hover {
-    border: 1px solid #e9e9e9;
+    border: v-bind(borderStyle) solid #e9e9e9;
   }
 }
 </style>

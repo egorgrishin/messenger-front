@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import AppInput from "../components/AppInput.vue";
-import { Ref, ref } from "vue";
-import AuthService from "../services/AuthService";
-import { Router, useRouter } from "vue-router";
 import AppButton from "components/AppButton.vue";
+import AppInput from "components/AppInput.vue";
+import { ref } from "vue";
+import { login } from "services/AuthService";
+import { useRouter } from "vue-router";
 
-const router: Router = useRouter();
-const nick: Ref<string> = ref<string>('');
-const password: Ref<string> = ref<string>('');
+const router = useRouter();
+const nick = ref<string>('');
+const password = ref<string>('');
 
 const onLogin = async (event: Event): Promise<void> => {
   event.preventDefault();
-  if (await new AuthService().login(nick.value, password.value)) {
+  if (await login(nick.value, password.value)) {
     await router.push({ name: 'chat.list' });
   }
 }
@@ -20,11 +20,23 @@ const onLogin = async (event: Event): Promise<void> => {
 <template>
   <div class="auth__block">
     <span class="auth__title">Вход в аккаунт</span>
+
     <form class="auth__form" @submit="onLogin">
-      <AppInput v-model:model="nick" type="text" placeholder="Логин" autocomplete />
-      <AppInput v-model:model="password" type="password" placeholder="Пароль" autocomplete />
+      <AppInput
+        v-model:model="nick"
+        type="text"
+        placeholder="Логин"
+        autocomplete
+      />
+      <AppInput
+        v-model:model="password"
+        type="password"
+        placeholder="Пароль"
+        autocomplete
+      />
       <AppButton bg="#212121" :fontWeight="600">Войти</AppButton>
     </form>
+
     <RouterLink :to="{ name: 'register' }" class="auth__register-link">
       <AppButton
         bg="#fff"

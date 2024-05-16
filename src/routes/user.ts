@@ -1,4 +1,4 @@
-const SearchUserView = () => import('../views/SearchUserView.vue');
+const SearchUserView = () => import('views/SearchUserView.vue');
 
 export default [
   {

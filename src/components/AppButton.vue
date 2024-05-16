@@ -31,7 +31,6 @@ const props = withDefaults(defineProps<Props>(), {
 button {
   border-radius: 8px;
   font-size: 1em;
-  font-weight: 500;
   font-family: inherit;
   cursor: pointer;
   transition: 0.1s;

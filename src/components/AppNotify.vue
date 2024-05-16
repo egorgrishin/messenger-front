@@ -4,27 +4,28 @@ import Notify from "composables/notify";
 
 <template>
   <Transition>
-    <div v-if="Notify.text.value">
-      <span>{{ Notify.text.value }}</span>
+    <div class="notify" v-if="Notify.text.value">
+      <span class="notify__text">{{ Notify.text.value }}</span>
     </div>
   </Transition>
 </template>
 
 <style scoped lang="scss">
-div {
+.notify {
   position: fixed;
   bottom: 1rem;
   right: 1rem;
   max-width: 18rem;
-  background: #D0342C;
   padding: 0.5rem 1rem;
   border-radius: 4px;
+  background: #D0342C;
 
-  span {
+  .notify__text {
     color: #fff;
   }
 }
 
+// Анимации появления и исчезновения
 .v-enter-active {
   transition: 0.3s;
 }

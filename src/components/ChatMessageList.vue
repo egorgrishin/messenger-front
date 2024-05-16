@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Chat, Message } from "../interfaces/chat";
-import ChatService from "../services/ChatService";
-import { nextTick, onMounted, watch } from "vue";
-import useList, { Direction } from "../composables/list";
+import { Direction, useList } from "composables/list";
+import { Chat, Message } from "interfaces/chat";
+import { getChatMessages } from "services/ChatService";
+import { nextTick, watch } from "vue";
 
 const props = defineProps<{
   userId: number,
@@ -11,48 +11,51 @@ const props = defineProps<{
 }>();
 
 const {
-  itemsList,
-  items,
-  lastItemId,
-  loadItems,
-  scrollList,
-  setScroll,
+  itemsList, // HTML элемент - список сообщений
+  items,     // Список сообщений
+  loadItems, // Функция загрузки сообщений
+  setScroll, // Функция для скролла списка сообщений
 } = useList<Message>({
   direction: Direction.Up,
-  itemsGetter: (): Promise<Message[] | null> => new ChatService().getChatMessages({
-    chatId: props.chat.id,
-    startId: lastItemId.value,
-  }).then((messages: Message[] | null) => messages?.reverse() ?? null),
+  itemsGetter: (lastId: number | null): Promise<Message[] | null> => {
+    return getChatMessages(props.chat.id, lastId)
+      .then((messages: Message[] | null) => messages?.reverse() ?? null)
+  },
   lastIdGetter: (items: Message[]) => items[0].id,
 });
 
-onMounted(() => {
-  const list: Element = itemsList.value as Element;
-  const before = list.scrollHeight ?? 0;
-  list.addEventListener('scroll', scrollList);
-  loadItems().then(() => {
-    nextTick().then(() => setScroll(before, 0));
-  });
-});
+// Загружаем список сообщений
+loadItems();
 
+// Наблюдатель за размером текстового поля
 watch(() => props.inputHeight, (value: number, oldValue: number) => {
   const diff: number = value - oldValue;
-  if (diff < 0) {
+  const list: HTMLDivElement = itemsList.value as HTMLDivElement;
+
+  // Положение пользователь в списке: сколько проскролил + высота списка
+  const scrolled: number = list.scrollTop + list.clientHeight;
+
+  // Если пользователь был внизу списка, то прокручиваем его до нижней точки,
+  // Чтобы пользователь был "приклеен" к низу списка
+  if (diff > 0 && list.scrollHeight <= scrolled + diff) {
+    list.scroll({ top: list.scrollHeight });
     return;
-  }
-  const list: HTMLElement = itemsList.value as HTMLElement;
-  const scrollHeight: number = Math.floor(diff + list.scrollTop + list.clientHeight)
-  if (scrollHeight === list.scrollHeight) {
-    itemsList.value?.scroll({ top: itemsList.value?.scrollTop + diff });
   }
 });
 
+/**
+ * Добавляет новое сообщения в чат
+ * @param message Добавляемое сообщени
+ */
 const addMessage: (message: Message) => void = (message: Message): void => {
-  items.value.push(message);
   const list: HTMLElement = itemsList.value as HTMLElement;
-  const scrollHeight: number = list.clientHeight + list.scrollTop;
-  if (scrollHeight === list.scrollHeight) {
-    nextTick().then(() => setScroll(0, 0));
+  const scrolled: number = list.clientHeight + list.scrollTop;
+  items.value.push(message);
+
+  // Если пользователь находился внизу списка
+  if (scrolled === list.scrollHeight) {
+    // То ожидаем тик, чтобы проскролить до нового сообщения
+    nextTick().then(() => setScroll(0));
   }
 }
 
@@ -62,7 +65,7 @@ defineExpose({
 </script>
 
 <template>
-  <div ref="itemsList" class="messenger__message-list">
+  <div ref="itemsList" class="chat__messages-list">
     <div
       v-for="message in items"
       :key="message.id"
@@ -77,9 +80,9 @@ defineExpose({
 </template>
 
 <style scoped lang="scss">
-@import "../assets/vars";
+@import "assets/vars";
 
-.messenger__message-list {
+.chat__messages-list {
   display: flex;
   flex-direction: column;
   flex-grow: 1;

@@ -1,22 +1,30 @@
 <script setup lang="ts">
+import AppSvgLogout from "components/AppIconLogout.vue";
+import AppSvgPlus from "components/AppIconPlus.vue";
+import { logout } from "services/AuthService";
 import { Router, useRouter } from "vue-router";
-import { ref, Ref } from "vue";
-import AuthService from "services/AuthService";
-import AppSvgPlus from "components/AppSvgPlus.vue";
-import AppSvgLogout from "components/AppSvgLogout.vue";
+import { ref } from "vue";
 
 const router: Router = useRouter();
+const nick = ref<string | null>(localStorage.getItem('userNick'));
 
+/**
+ * Выход из аккаунта
+ */
 const onLogout = async () => {
-  new AuthService().logout();
+  logout();
   await router.push({ name: 'login' });
 }
 
+/**
+ * Переход на страницу поиска пользователей
+ */
 const onSearch = async () => {
   await router.push({ name: 'user.search' });
 }
 
-const nick: Ref<string | null> = ref(localStorage.getItem('userNick'));
+// Слушатель события авторизации
+// Получаем из события ник для отображения в шапке
 window.addEventListener('auth', (event: any) => {
   nick.value = event.detail.nick;
 });
@@ -43,27 +51,26 @@ window.addEventListener('auth', (event: any) => {
 </template>
 
 <style lang="scss" scoped>
-@import "../assets/vars";
+@import "assets/vars";
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap');
 
 header {
   height: $header-height;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 0 1.5rem;
   box-sizing: border-box;
   background: #fff;
-  align-items: center;
 }
 
 .logo {
-  color: #212121;
   font: bold 1.1rem 'Raleway', sans-serif;
 }
 
 .menu {
-  align-items: center;
   display: flex;
+  align-items: center;
   gap: 0.75rem;
 
   &__nick {

@@ -1,14 +1,14 @@
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { AxiosInstance } from "axios";
-import AuthService from "./services/AuthService";
-import Notify from "./composables/notify.ts";
+import { checkAuth } from "services/AuthService";
+import Notify from "composables/notify.ts";
 
 const request: AxiosInstance = axios.create({
   baseURL: 'http://127.0.0.1:80',
 });
 
 async function onFulfilledHandler(config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> {
-  if (config.url !== '/api/v1/refresh' && await new AuthService().checkAuth()) {
+  if (config.url !== '/api/v1/refresh' && await checkAuth()) {
     const accessToken: string | null = localStorage.getItem('accessToken');
     config.headers['Authorization'] = `Bearer ${accessToken}`;
   }

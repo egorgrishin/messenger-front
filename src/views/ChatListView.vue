@@ -1,78 +1,65 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
-import { Chat } from "../interfaces/chat";
-import ChatService from "../services/ChatService";
-import useList, { Direction } from "../composables/list";
-import router from "../router.config";
+import router from "@/router.config";
+import { useList } from "composables/list";
+import { Chat } from "interfaces/chat";
 import { User } from "interfaces/user.ts";
+import { getUserChats } from "services/ChatService";
 
-const userId: number = +(localStorage.getItem('userId') ?? 0);
+// ID текущего пользователя
+const userId: number = +(localStorage.getItem('userId') || 0);
+
+// Подключаем функционал динамически подгружаемого списка чатов
 const {
-  itemsList,
-  items,
-  lastItemId,
-  loadItems,
-  scrollList,
+  itemsList, // HTML элемент - список чатов
+  items,     // Список чатов
+  loadItems, // Функция загрузки чатов
 } = useList<Chat>({
-  direction: Direction.Down,
-  itemsGetter: (): Promise<Chat[] | null> => new ChatService().getUserChats({
-    userId,
-    startMessageId: lastItemId.value,
-  }),
+  itemsGetter: (lastId: number | null): Promise<Chat[] | null> => getUserChats(userId, lastId),
   lastIdGetter: (items: Chat[]) => items[items.length - 1].lastMessageId ?? 0,
 });
 
-onMounted(() => {
-  itemsList.value?.addEventListener('scroll', scrollList);
-});
+// Загружаем список чатов
 loadItems();
 
-const openChat: (chat: Chat) => void = (chat: Chat): void => {
+// Направляет на страницу чатов
+const openChat = (chat: Chat): void => {
   router.push({
     name: 'message.list',
     params: {
       chatId: +(chat.id),
     },
   });
-}
+};
+
+// Возвращает название чата
+const getChatName = (chat: Chat): string => {
+  return chat
+    .users
+    ?.filter((user: User) => user.id !== userId)[0]
+    .nick || 'No name';
+};
+
+// Возвращает первую букву названия чата
+const getFirstLetter = (nick: string): string => nick[0];
+
+// Возвращает дату и время последнего сообщения
+const getFormattedDate: (datetime: string) => string = (datetime: string): string => {
+  const parse = (x: number): string => x < 10 ? '0' + x : x.toString();
+  const date = new Date(datetime);
+
+  const month: string = parse(date.getMonth() + 1);
+  const day: string = parse(date.getDate());
+  const hours: string = parse(date.getHours());
+  const minutes: string = parse(date.getMinutes());
+  return `${day}.${month} ${hours}:${minutes}`;
+};
 
 window.Echo
   .private(`users.${userId}.chats`)
-  .listen('.chat.updated', async ({ chatId }: { chatId: number }) => {
-    const updatedChat: Chat | null = await new ChatService().findChat({ chatId });
-    if (!updatedChat) {
-      return;
-    }
-
+  .listen('.chat.updated', async (updatedChat: Chat) => {
     items.value = items.value.filter((chat: Chat) => chat.id != updatedChat.id);
     items.value.unshift(updatedChat);
   });
-
-const getChatName: (chat: Chat) => string = (chat: Chat): string => {
-  return chat.users ? chat.users.filter((user: User) => user.id !== userId)[0].nick : 'No name';
-}
-
-const getFirstLetter: (nick: string) => string = (nick: string): string => {
-  return nick[0];
-}
-
-const getFormattedDate: (datetime: string) => string = (datetime: string): string => {
-  const date = new Date(datetime);
-
-  const monthIndex: number = date.getMonth() + 1;
-  const fullMonth: string = monthIndex < 10 ? '0' + monthIndex : monthIndex.toString();
-
-  const day: number = date.getDate();
-  const fullDay: string = day < 10 ? '0' + day : day.toString();
-
-  const hours: number = date.getHours();
-  const fullHours: string = hours < 10 ? '0' + hours : hours.toString();
-
-  const minutes: number = date.getMinutes();
-  const fullMinutes: string = minutes < 10 ? '0' + minutes : minutes.toString();
-
-  return `${fullDay}.${fullMonth} ${fullHours}:${fullMinutes}`;
-}
 </script>
 
 <template>

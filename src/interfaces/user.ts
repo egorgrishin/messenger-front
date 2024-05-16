@@ -1,15 +1,10 @@
-interface User {
+import { AxiosResponse } from "axios";
+
+export interface User {
   id: number,
   nick: string,
   createdAt: string,
   updatedAt: string,
 }
 
-interface GetUsersResponse {
-  data: User[],
-}
-
-export type {
-  User,
-  GetUsersResponse,
-};
+export type AxiosGetUsers = AxiosResponse<{ data: User[] }>;

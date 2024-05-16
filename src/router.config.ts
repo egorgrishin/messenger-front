@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory, RouteLocationNormalized, Router } from "vue-router";
-import auth from "./routes/auth";
-import base from "./routes/base";
-import chat from "./routes/chat";
-import user from "./routes/user";
-import AuthService from "./services/AuthService";
+import auth from "routes/auth";
+import base from "routes/base";
+import chat from "routes/chat";
+import user from "routes/user";
+import { checkAuth } from "services/AuthService";
 
 const router: Router = createRouter({
   history: createWebHistory(),
@@ -22,7 +22,7 @@ router.beforeEach(async (
   if (!name) {
     return false;
   }
-  const isLogged: boolean = await new AuthService().checkAuth();
+  const isLogged: boolean = await checkAuth();
   return name === 'home' || isLogged !== ['login', 'register'].includes(name)
     ? true
     : { name: 'home' };

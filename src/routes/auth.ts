@@ -1,5 +1,5 @@
-const LoginView = () => import('../views/LoginView.vue')
-const RegisterView = () => import('../views/RegisterView.vue')
+const LoginView = () => import('views/LoginView.vue')
+const RegisterView = () => import('views/RegisterView.vue')
 
 export default [
   {

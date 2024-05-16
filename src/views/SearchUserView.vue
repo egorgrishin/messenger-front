@@ -1,36 +1,33 @@
 <script setup lang="ts">
-import useList, { Direction } from "../composables/list";
-import UserService from "../services/UserService";
-import { ref, Ref, onMounted } from "vue";
-import { User } from "../interfaces/user";
-import AppInput from "../components/AppInput.vue";
-import { RouteLocationNormalizedLoaded, Router, useRoute, useRouter } from "vue-router";
-import { Chat } from "../interfaces/chat";
-import ChatService from "../services/ChatService";
-import AppSvgSearch from "components/AppSvgSearch.vue";
 import AppButton from "components/AppButton.vue";
+import AppSvgSearch from "components/AppIconSearch.vue";
+import AppInput from "components/AppInput.vue";
+import { useList } from "composables/list";
+import { Chat } from "interfaces/chat";
+import { User } from "interfaces/user";
+import { createChat } from "services/ChatService";
+import { getUsers } from "services/UserService";
+import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
+// ID текущего пользователя
 const userId: number = +(localStorage.getItem('userId') ?? 0);
-const router: Router = useRouter();
-const route: RouteLocationNormalizedLoaded = useRoute();
-const nick: Ref<string> = ref(route.query.q?.toString() ?? '');
+const router = useRouter();
+const route = useRoute();
+const nick = ref<string>(route.query.q?.toString() ?? '');
+
+// Подключаем функционал динамически подгружаемого списка пользователей
 const {
-  itemsList,
-  items,
-  lastItemId,
-  loadItems,
-  scrollList,
-  reset,
+  itemsList, // HTML элемент - список пользователей
+  items,     // Список пользователей
+  loadItems, // Функция загрузки пользователей
+  reset,     // Функция сброса состояния списка
 } = useList<User>({
-  direction: Direction.Down,
-  itemsGetter: (): Promise<User[] | null> => new UserService().getUsers(nick.value, lastItemId.value),
+  itemsGetter: (lastId: number | null): Promise<User[] | null> => getUsers(nick.value, lastId),
   lastIdGetter: (items: User[]) => items[items.length - 1].id,
 });
 
-onMounted(() => {
-  itemsList.value?.addEventListener('scroll', scrollList);
-});
-
+// Ищет пользователей по нику
 const onSearch: (event: Event) => void = (event: Event): void => {
   event.preventDefault();
   reset();
@@ -38,13 +35,10 @@ const onSearch: (event: Event) => void = (event: Event): void => {
   router.replace({ query: { q: nick.value } });
 }
 
-const onClick: (user: User) => void = async (user: User): Promise<void> => {
-  const chat: Chat | null = await new ChatService().createChat({
-    isDialog: true,
-    users: [userId, user.id],
-  });
+// Создает чат с выбранным пользователем и открывает его
+const onClick = async (user: User): Promise<void> => {
+  const chat: Chat | null = await createChat([userId, user.id]);
   if (!chat) {
-    console.log("Error");
     return;
   }
 
@@ -58,8 +52,9 @@ const onClick: (user: User) => void = async (user: User): Promise<void> => {
 </script>
 
 <template>
-  <div class="user__block" ref="itemsList">
-    <h2>Поиск пользователей</h2>
+  <div ref="itemsList" class="search">
+    <h2 class="search__header">Поиск пользователей</h2>
+
     <form class="search__form" @submit="onSearch">
       <AppInput
         v-model:model="nick"
@@ -73,17 +68,15 @@ const onClick: (user: User) => void = async (user: User): Promise<void> => {
 
     <div>
       <div
-        class="user__item"
+        class="user"
         v-for="user in items"
         :key="user.id"
         @click="() => onClick(user)"
       >
-        <div class="messenger__chat-avatar">
+        <div class="user__avatar">
           {{ user.nick[0].toUpperCase() }}
         </div>
-        <span class="messenger__chat-title">
-          {{ user.nick }}
-        </span>
+        <span>{{ user.nick }}</span>
       </div>
     </div>
   </div>
@@ -92,16 +85,16 @@ const onClick: (user: User) => void = async (user: User): Promise<void> => {
 <style scoped lang="scss">
 @import "../assets/vars";
 
-.user__block {
+.search {
   overflow-y: auto;
   height: calc(100vh - $header-height - 2rem);
   margin-top: -0.5rem;
 
-  h2 {
+  &__header {
     margin: 0 0 0.5rem;
   }
 
-  .search__form {
+  &__form {
     display: flex;
     justify-content: space-between;
     gap: 1rem;
@@ -111,29 +104,29 @@ const onClick: (user: User) => void = async (user: User): Promise<void> => {
       width: 100%;
     }
   }
+}
 
-  .user__item {
+.user {
+  display: flex;
+  align-items: center;
+  padding-bottom: 0.5rem;
+
+  &__avatar {
+    width: 3rem;
+    height: 3rem;
+    margin-right: 1rem;
     display: flex;
     align-items: center;
-    padding-bottom: 0.5rem;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 4rem;
+    background: bisque;
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
 
-    .messenger__chat-avatar {
-      width: 3rem;
-      height: 3rem;
-      margin-right: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      border-radius: 4rem;
-      background: bisque;
-      font-size: 1.25rem;
-      font-weight: 500;
-    }
-
-    &:last-child {
-      padding-bottom: 0;
-    }
+  &:last-child {
+    padding-bottom: 0;
   }
 }
 </style>
