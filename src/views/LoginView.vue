@@ -34,7 +34,7 @@ const onLogin = async (event: Event): Promise<void> => {
         placeholder="Пароль"
         autocomplete
       />
-      <AppButton bg="#212121" :fontWeight="600">Войти</AppButton>
+      <AppButton bg="#212121" color="#fff" :fontWeight="600">Войти</AppButton>
     </form>
 
     <RouterLink :to="{ name: 'register' }" class="auth__register-link">

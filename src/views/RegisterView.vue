@@ -28,7 +28,7 @@ const onRegister = async (event: Event): Promise<void> => {
         type="password"
         placeholder="Пароль"
       />
-      <AppButton bg="#212121" :fontWeight="600">Регистрация</AppButton>
+      <AppButton bg="#212121" color="#fff" :fontWeight="600">Регистрация</AppButton>
     </form>
 
     <RouterLink :to="{ name: 'login' }" class="auth__register-link">
