@@ -50,19 +50,19 @@ onUnmounted(() => getEcho().leave(channel));
   <div class="list">
     <h2 class="list__header">Чаты</h2>
     <div ref="itemsList" class="list__chats-list">
-      <ChatListItem
-        v-for="chat in items"
-        :key="chat.id"
-        :chat="chat"
-        @click="() => openChat(chat)"
-      />
-
       <h3
         v-if="isLoaded && !items.length"
         class="chats-list__header_empty"
       >
         Список чатов пуст
       </h3>
+
+      <ChatListItem
+        v-for="chat in items"
+        :key="chat.id"
+        :chat="chat"
+        @click="() => openChat(chat)"
+      />
     </div>
   </div>
 </template>

@@ -7,10 +7,16 @@ import { AxiosResponse } from "axios";
  * Возвращает список пользователей с фильтрацией по нику с ID меньше указанного
  */
 async function getUsers(nick: string, startId: number | null = null): Promise<User[] | null> {
+  if (!nick) {
+    Notify.send('Введите имя пользователя');
+    return null;
+  }
+
   const response: AxiosGetUsers = await apiGetUsers(nick, startId);
   if (response.status === 200) {
     return response.data.data;
   }
+
   Notify.send('Не удалось загрузить пользователей');
   return null;
 }

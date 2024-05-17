@@ -16,6 +16,9 @@ const router = useRouter();
 const route = useRoute();
 const nick = ref<string>(route.query.q?.toString() ?? '');
 
+// Завершился ли API запрос на получеение пользователей
+const isLoaded = ref<boolean>(false);
+
 // Подключаем функционал динамически подгружаемого списка пользователей
 const {
   itemsList, // HTML элемент - список пользователей
@@ -31,7 +34,8 @@ const {
 const onSearch: (event: Event) => void = (event: Event): void => {
   event.preventDefault();
   reset();
-  loadItems();
+  isLoaded.value = false;
+  loadItems().then(() => isLoaded.value = true);
   router.replace({ query: { q: nick.value } });
 }
 
@@ -66,9 +70,15 @@ const onClick = async (user: User): Promise<void> => {
       </AppButton>
     </form>
 
-    <div>
+    <div class="list">
+      <h3
+        v-if="isLoaded && !items.length"
+        class="list__header_empty"
+      >
+        Пользователи не найдены
+      </h3>
       <div
-        class="user"
+        class="list__user"
         v-for="user in items"
         :key="user.id"
         @click="() => onClick(user)"
@@ -83,7 +93,7 @@ const onClick = async (user: User): Promise<void> => {
 </template>
 
 <style scoped lang="scss">
-@import "../assets/vars";
+@import "assets/vars";
 
 .search {
   overflow-y: auto;
@@ -106,11 +116,20 @@ const onClick = async (user: User): Promise<void> => {
   }
 }
 
-.user {
-  display: flex;
-  align-items: center;
-  padding-bottom: 0.5rem;
+.list {
+  &__header_empty {
+    font-weight: 500;
+    margin-top: 0.75rem;
+  }
 
+  &__user {
+    display: flex;
+    align-items: center;
+    padding-bottom: 0.5rem;
+  }
+}
+
+.user {
   &__avatar {
     width: 3rem;
     height: 3rem;
