@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import router from "@/router.config";
 import { getEcho } from "@/helper";
 import { useList } from "composables/list";
 import { Chat } from "interfaces/chat";
-import { User } from "interfaces/user.ts";
 import { getUserChats } from "services/chatService.ts";
-import { onUnmounted } from "vue";
+import { onUnmounted, ref } from "vue";
+import { useRouter } from "vue-router";
+import ChatListItem from "components/ChatListItem.vue";
 
 // ID текущего пользователя
 const userId: number = +(localStorage.getItem('userId') || 0);
+const router = useRouter();
+// Завершился ли API запрос на получеение чатов
+const isLoaded = ref<boolean>(false);
 
 // Подключаем функционал динамически подгружаемого списка чатов
 const {
@@ -21,7 +24,7 @@ const {
 });
 
 // Загружаем список чатов
-loadItems();
+loadItems().then(() => isLoaded.value = true);
 
 // Направляет на страницу чатов
 const openChat = (chat: Chat): void => {
@@ -33,143 +36,53 @@ const openChat = (chat: Chat): void => {
   });
 };
 
-// Возвращает название чата
-const getChatName = (chat: Chat): string => {
-  return chat
-    .users
-    ?.filter((user: User) => user.id !== userId)[0]
-    .nick || 'No name';
-};
-
-// Возвращает первую букву названия чата
-const getFirstLetter = (nick: string): string => nick[0];
-
-// Возвращает дату и время последнего сообщения
-const getFormattedDate: (datetime: string) => string = (datetime: string): string => {
-  const parse = (x: number): string => x < 10 ? '0' + x : x.toString();
-  const date = new Date(datetime);
-
-  const month: string = parse(date.getMonth() + 1);
-  const day: string = parse(date.getDate());
-  const hours: string = parse(date.getHours());
-  const minutes: string = parse(date.getMinutes());
-  return `${day}.${month} ${hours}:${minutes}`;
-};
-
+const channel: string = `users.${userId}.chats`;
 getEcho()
-  .private(`users.${userId}.chats`)
+  .private(channel)
   .listen('.chat.updated', async (updatedChat: Chat) => {
     items.value = items.value.filter((chat: Chat) => chat.id != updatedChat.id);
     items.value.unshift(updatedChat);
   });
-onUnmounted(() => window.Echo.leave(`users.${userId}.chats`));
+onUnmounted(() => getEcho().leave(channel));
 </script>
 
 <template>
-  <div class="block">
-    <h2>Чаты</h2>
-    <div ref="itemsList" class="messenger__chat-list">
-      <div
-        class="messenger__chat-item"
-        @click="() => openChat(chat)"
+  <div class="list">
+    <h2 class="list__header">Чаты</h2>
+    <div ref="itemsList" class="list__chats-list">
+      <ChatListItem
         v-for="chat in items"
         :key="chat.id"
+        :chat="chat"
+        @click="() => openChat(chat)"
+      />
+
+      <h3
+        v-if="isLoaded && !items.length"
+        class="chats-list__header_empty"
       >
-        <div class="messenger__chat-avatar">
-          {{ getFirstLetter(getChatName(chat)).toUpperCase() }}
-        </div>
-        <div class="messenger__chat-data">
-          <div class="messenger__chat-header">
-          <span class="messenger__chat-title">
-            {{ getChatName(chat) }}
-          </span>
-            <span class="messenger__chat-msg-date" v-if="chat.lastMessage">
-            {{ getFormattedDate(chat.lastMessage.createdAt) }}
-          </span>
-          </div>
-          <span class="messenger__chat-msg">
-          <span
-            class="messenger__chat-msg-author"
-            v-if="chat.lastMessage?.userId === userId">Вы: </span>
-          {{ chat.lastMessage?.text || 'Сообщений нет' }}
-        </span>
-        </div>
-      </div>
+        Список чатов пуст
+      </h3>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-@import "../assets/vars";
+@import "assets/vars";
 
-.block {
+.list {
   height: calc(100vh - $header-height - 2rem);
   overflow-y: auto;
   padding-right: 0.5rem;
 
-  h2 {
+  &__header {
     margin: -0.5rem 0 0.75rem;
   }
+}
 
-  .messenger__chat-list {
-    .messenger__chat-item {
-      display: flex;
-      align-items: center;
-      padding-bottom: 0.75rem;
-      cursor: pointer;
-
-      &:last-child {
-        padding-bottom: 0;
-      }
-
-      .messenger__chat-avatar {
-        width: 4rem;
-        height: 4rem;
-        margin-right: 1rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        border-radius: 4rem;
-        background: bisque;
-        font-size: 1.5rem;
-        font-weight: 500;
-      }
-
-      .messenger__chat-data {
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        padding-bottom: 0.25rem;
-        flex-grow: 1;
-
-        .messenger__chat-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-
-          .messenger__chat-title {
-            font-weight: 500;
-          }
-
-          .messenger__chat-msg-date {
-            color: #999999;
-            font-size: 0.85rem;
-          }
-        }
-
-        .messenger__chat-msg {
-          color: #999999;
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-
-          .messenger__chat-msg-author {
-            color: #666;
-          }
-        }
-      }
-    }
+.chats-list {
+  &__header_empty {
+    font-weight: 500;
   }
 }
 </style>
