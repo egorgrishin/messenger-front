@@ -3,7 +3,6 @@ import AppButton from "components/AppButton.vue";
 import AppInput from "components/AppInput.vue";
 import { createUser } from "services/userService.ts";
 import { ref } from "vue";
-import Notify from "composables/notify.ts";
 import { login } from "services/authService.ts";
 import { useRouter } from "vue-router";
 
@@ -18,15 +17,12 @@ const password = ref<string>('');
 const onRegister = async (event: Event): Promise<void> => {
   event.preventDefault();
   if (!await createUser(nick.value, password.value)) {
-    Notify.send('Ошибка решистрации');
     return;
   }
 
-  if (await login(nick.value, password.value)) {
-    await router.push({ name: 'chat.list' });
-  } else {
-    await router.push({ name: 'login' });
-  }
+  await login(nick.value, password.value)
+    ? await router.push({ name: 'chat.list' })
+    : await router.push({ name: 'login' });
 }
 </script>
 

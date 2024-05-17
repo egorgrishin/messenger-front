@@ -19,8 +19,22 @@ async function getUsers(nick: string, startId: number | null = null): Promise<Us
  * Создает нового пользователя
  */
 async function createUser(nick: string, password: string): Promise<boolean> {
+  if (nick.length < 3) {
+    Notify.send('Логин должен содержать не менее 3 символов');
+    return false;
+  }
+  if (!password) {
+    Notify.send('Пароль не может быть пустым');
+    return false;
+  }
+
   const response: AxiosResponse<any> = await apiCreateUser(nick, password);
-  return response.status === 201;
+  const isSuccess = response.status === 201;
+
+  if (!isSuccess) {
+    Notify.send('Ошибка регистрации');
+  }
+  return isSuccess;
 }
 
 export {
