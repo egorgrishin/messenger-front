@@ -2,13 +2,16 @@
 import { Direction, useList } from "composables/list";
 import { Chat, Message } from "interfaces/chat";
 import { getChatMessages } from "services/chatService.ts";
-import { nextTick, watch } from "vue";
+import { nextTick, ref, watch } from "vue";
 
 const props = defineProps<{
   userId: number,
   chat: Chat,
   inputHeight: number,
 }>();
+
+// Завершился ли API запрос на получеение сообщений
+const isLoaded = ref<boolean>(false);
 
 const {
   itemsList, // HTML элемент - список сообщений
@@ -25,7 +28,7 @@ const {
 });
 
 // Загружаем список сообщений
-loadItems();
+loadItems().then(() => isLoaded.value = true);
 
 // Наблюдатель за размером текстового поля
 watch(() => props.inputHeight, (value: number, oldValue: number) => {
@@ -66,6 +69,14 @@ defineExpose({
 
 <template>
   <div ref="itemsList" class="chat__messages-list">
+    <h3
+      v-if="isLoaded && !items.length"
+      class="messages-list__header_empty"
+    >
+      Сообщений нет
+    </h3>
+    <div class="messages-list__empty-block" />
+
     <div
       v-for="message in items"
       :key="message.id"
@@ -86,10 +97,9 @@ defineExpose({
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  //justify-content: flex-end;
   overflow-y: auto;
 
-  div {
+  div:not(.messages-list__empty-block) {
     white-space: pre-wrap;
     text-align: left;
     max-width: 70%;
@@ -97,6 +107,17 @@ defineExpose({
     border: 1px solid #ddd;
     border-radius: 0.5rem;
     margin-bottom: 0.5rem;
+  }
+}
+
+.messages-list {
+  &__empty-block {
+    flex-grow: 1;
+  }
+
+  &__header_empty {
+    font-weight: 500;
+    margin-top: 0.5rem;
   }
 }
 

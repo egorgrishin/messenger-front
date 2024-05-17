@@ -43,15 +43,16 @@ const addMessage = (message: Message): void => {
   messageList.value?.addMessage(message);
 }
 
+const channel: string = `chats.${props.chatId}`;
 getEcho()
-  .private(`chats.${props.chatId}`)
+  .private(channel)
   .listen('.message.new', (message: Message) => {
     // Добавляем сообщение в чат, если оно пришло от собеседника
     if (message.userId !== userId) {
       addMessage(message);
     }
   });
-onUnmounted(() => window.Echo.leave(`chats.${props.chatId}`));
+onUnmounted(() => getEcho().leave(channel));
 </script>
 
 <template>
@@ -82,8 +83,7 @@ onUnmounted(() => window.Echo.leave(`chats.${props.chatId}`));
   display: flex;
   flex-direction: column;
 
-  &__message-list {
-    display: flex;
+  &__messages-list {
     flex-grow: 1;
   }
 }
