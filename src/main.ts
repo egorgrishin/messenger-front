@@ -1,8 +1,8 @@
-import './style.scss'
-import App from './App.vue'
+import '@/style.scss'
+import App from '@/App.vue'
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
-import router from "./router.config";
+import router from "@/router.config";
 import { createApp } from 'vue'
 
 window.Pusher = Pusher;
