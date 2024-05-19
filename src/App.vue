@@ -14,7 +14,7 @@ import AppNotify from "components/AppNotify.vue";
 <style lang="scss">
 #app {
   width: 100%;
-  max-width: 640px;
+  max-width: 560px;
   min-height: 100vh;
   margin: 0 auto;
   display: flex;
@@ -22,5 +22,7 @@ import AppNotify from "components/AppNotify.vue";
   box-sizing: border-box;
   background: #ffffff;
   color: #212121;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e9e9e9;
 }
 </style>
