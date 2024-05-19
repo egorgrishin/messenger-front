@@ -13,9 +13,9 @@ import AppNotify from "components/AppNotify.vue";
 
 <style lang="scss">
 #app {
+  height: 100%;
   width: 100%;
   max-width: 560px;
-  min-height: 100vh;
   margin: 0 auto;
   display: flex;
   flex-direction: column;

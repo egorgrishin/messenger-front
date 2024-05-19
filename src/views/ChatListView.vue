@@ -71,9 +71,9 @@ onUnmounted(() => getEcho().leave(channel));
 @import "assets/vars";
 
 .list {
-  height: calc(100vh - $header-height - 2rem);
   overflow-y: auto;
   padding-right: 0.5rem;
+  height: 100%;
 
   &__header {
     margin: -0.5rem 0 0.75rem;

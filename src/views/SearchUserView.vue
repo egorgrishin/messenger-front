@@ -105,7 +105,7 @@ const onClick = (user: User): void => {
 
 .search {
   overflow-y: auto;
-  height: calc(100vh - $header-height - 2rem);
+  height: 100%;
   margin-top: -0.5rem;
 
   &__header {
