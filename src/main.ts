@@ -6,6 +6,7 @@ import router from "@/router.config";
 import { createApp } from 'vue'
 
 const host: string = import.meta.env.VITE_HOST ?? 'http://127.0.0.1'
+const port: number = import.meta.env.PROD ? 9001 : 80;
 window.Pusher = Pusher;
 window.Echo = new Echo({
   broadcaster: 'reverb',
@@ -14,7 +15,7 @@ window.Echo = new Echo({
   wsPort: import.meta.env.VITE_REVERB_PORT,
   wssPort: import.meta.env.VITE_REVERB_PORT,
   forceTLS: import.meta.env.VITE_REVERB_SCHEME === 'https',
-  authEndpoint: host + '/broadcasting/auth',
+  authEndpoint: `${host}:${port}/broadcasting/auth`,
   enabledTransports: ['ws', 'wss'],
 });
 
