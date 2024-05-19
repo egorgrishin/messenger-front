@@ -1,6 +1,6 @@
-import { Chat, Message } from "../interfaces/chat";
+import { Chat, Message } from "interfaces/chat";
 import { nextTick, onMounted, ref, Ref } from "vue";
-import { User } from "../interfaces/user";
+import { User } from "interfaces/user";
 
 // Направление прокрутки: вверх или вниз
 export enum Direction {

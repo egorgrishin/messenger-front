@@ -1,4 +1,4 @@
-import { User } from "./user";
+import { User } from "interfaces/user";
 import { AxiosResponse } from "axios";
 
 export interface Message {
