@@ -8,11 +8,10 @@ import ChatMessageList from "components/ChatMessageList.vue";
 import ChatInput from "components/ChatInput.vue";
 import { User } from "interfaces/user";
 
-// ID текущего пользователя
+const props = defineProps<{ chatId: string }>();
 const userId: number = +(localStorage.getItem('userId') || 0);
-const props = defineProps<{
-  chatId: number,
-}>();
+const chatId: number = +props.chatId;
+
 const messageList = ref<InstanceType<typeof ChatMessageList> | null>(null);
 const inputHeight = ref<number>(0);
 const chat = ref<Chat | null>(null);
@@ -34,7 +33,7 @@ const title = computed<string | undefined>(() => {
 
 // Загружает чат
 const loadChat = async () => {
-  chat.value = await findChat(props.chatId)
+  chat.value = await findChat(chatId)
 };
 loadChat();
 
@@ -43,7 +42,7 @@ const addMessage = (message: Message): void => {
   messageList.value?.addMessage(message);
 }
 
-const channel: string = `chats.${props.chatId}`;
+const channel: string = `chats.${chatId}`;
 getEcho()
   .private(channel)
   .listen('.message.new', (message: Message) => {
@@ -68,7 +67,7 @@ onUnmounted(() => getEcho().leave(channel));
     <div class="chat__messages-list" v-else />
     <ChatInput
       v-model:height="inputHeight"
-      :chatId="props.chatId"
+      :chatId="chatId"
       @add-message="addMessage"
     />
   </div>

@@ -9,12 +9,14 @@ import { createChat } from "services/chatService.ts";
 import { getUsers } from "services/userService.ts";
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useLoading } from "composables/loading.ts";
 
 // ID текущего пользователя
 const userId: number = +(localStorage.getItem('userId') ?? 0);
 const router = useRouter();
 const route = useRoute();
 const nick = ref<string>(route.query.q?.toString() ?? '');
+const { unique } = useLoading();
 
 // Завершился ли API запрос на получеение пользователей
 const isLoaded = ref<boolean>(false);
@@ -31,27 +33,33 @@ const {
 });
 
 // Ищет пользователей по нику
-const onSearch: (event: Event) => void = (event: Event): void => {
+const onSearch = (event: Event): void => {
   event.preventDefault();
-  reset();
-  isLoaded.value = false;
-  loadItems().then(() => isLoaded.value = true);
-  router.replace({ query: { q: nick.value } });
+
+  // Блокируем параллельное выполнение кода
+  unique(async () => {
+    reset();
+    isLoaded.value = false;
+    await loadItems();
+    isLoaded.value = true;
+    await router.replace({ query: { q: nick.value } });
+  }, undefined)
 }
 
 // Создает чат с выбранным пользователем и открывает его
-const onClick = async (user: User): Promise<void> => {
-  const chat: Chat | null = await createChat([userId, user.id]);
-  if (!chat) {
-    return;
-  }
+const onClick = (user: User): void => {
+  // Блокируем параллельное выполнение кода
+  unique(async () => {
+    const chat: Chat | null = await createChat([userId, user.id]);
+    if (!chat) return;
 
-  await router.push({
-    name: 'message.list',
-    params: {
-      chatId: +(chat.id),
-    },
-  });
+    await router.push({
+      name: 'message.list',
+      params: {
+        chatId: +(chat.id),
+      },
+    });
+  }, undefined);
 }
 </script>
 

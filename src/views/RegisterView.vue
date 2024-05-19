@@ -5,7 +5,9 @@ import { createUser } from "services/userService.ts";
 import { ref } from "vue";
 import { login } from "services/authService.ts";
 import { useRouter } from "vue-router";
+import { useLoading } from "composables/loading.ts";
 
+const { unique } = useLoading();
 const router = useRouter();
 const nick = ref<string>('');
 const password = ref<string>('');
@@ -14,15 +16,18 @@ const password = ref<string>('');
  * Регистрация ноового пользователя.
  * В случае успеха сразу происходит авторизация и перенеправление на список чатов
  */
-const onRegister = async (event: Event): Promise<void> => {
+const onRegister = (event: Event): void => {
   event.preventDefault();
-  if (!await createUser(nick.value, password.value)) {
-    return;
-  }
 
-  await login(nick.value, password.value)
-    ? await router.push({ name: 'chat.list' })
-    : await router.push({ name: 'login' });
+  // Блокируем параллельное выполнение кода
+  unique(async (): Promise<void> => {
+    if (!await createUser(nick.value, password.value)) {
+      return;
+    }
+    await login(nick.value, password.value)
+      ? await router.push({ name: 'chat.list' })
+      : await router.push({ name: 'login' });
+  }, undefined)
 }
 </script>
 

@@ -39,7 +39,7 @@ async function checkAuth(): Promise<boolean> {
   const now: number = Date.now() / 1000;
   const payload: PayloadAccessToken = getPayload(accessToken);
 
-  return now >= payload.exp
+  return now + 60 >= payload.exp
     ? await refresh(refreshToken)
     : true;
 }

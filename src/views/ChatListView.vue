@@ -27,8 +27,8 @@ const {
 loadItems().then(() => isLoaded.value = true);
 
 // Направляет на страницу чатов
-const openChat = (chat: Chat): void => {
-  router.push({
+const openChat = async (chat: Chat): Promise<void> => {
+  await router.push({
     name: 'message.list',
     params: {
       chatId: +(chat.id),
@@ -47,9 +47,9 @@ onUnmounted(() => getEcho().leave(channel));
 </script>
 
 <template>
-  <div class="list">
+  <div class="list" ref="itemsList">
     <h2 class="list__header">Чаты</h2>
-    <div ref="itemsList" class="list__chats-list">
+    <div class="list__chats-list">
       <h3
         v-if="isLoaded && !items.length"
         class="chats-list__header_empty"

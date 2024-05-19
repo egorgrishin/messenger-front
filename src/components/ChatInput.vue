@@ -4,6 +4,7 @@ import AppSvgSend from "components/AppIconSend.vue";
 import { Message } from "interfaces/chat";
 import { createMessage } from "services/chatService.ts";
 import { nextTick, onMounted, ref } from "vue";
+import { useLoading } from "composables/loading.ts";
 
 // Высота textarea
 const height = defineModel<number>('height', {
@@ -16,6 +17,7 @@ const emit = defineEmits<{
   (e: 'addMessage', message: Message): void
 }>();
 
+const { unique } = useLoading();
 const textarea = ref<HTMLTextAreaElement | null>(null);
 const text = ref<string>('');
 
@@ -26,7 +28,7 @@ const borderStyle: string = border + 'px';
 /**
  * Изменяет высоту textarea в записимости от текста
  */
-const onInput = () => {
+const onInput = (): void => {
   if (!textarea.value) {
     return;
   }
@@ -40,20 +42,23 @@ onMounted(onInput);
 /**
  * Отвправляет сообщение
  */
-const onSubmit = () => {
+const onSubmit = (): void => {
   const message = text.value.trim();
   if (!message) {
     return;
   }
 
-  // Вызываем функцию onInput, чтобы сбросить размер textarea до исходного
-  text.value = '';
-  nextTick(onInput);
-  createMessage(props.chatId, message).then((message: Message | null) => {
-    if (message) {
-      emit('addMessage', message);
+  // Блокируем параллельное выполнение кода
+  unique(async (): Promise<void> => {
+    // Вызываем функцию onInput, чтобы сбросить размер textarea до исходного
+    text.value = '';
+
+    nextTick(onInput).then();
+    const createdMessage = await createMessage(props.chatId, message);
+    if (createdMessage) {
+      emit('addMessage', createdMessage);
     }
-  });
+  }, undefined)
 }
 </script>
 

@@ -11,7 +11,7 @@ const nick = ref<string | null>(localStorage.getItem('userNick'));
 /**
  * Выход из аккаунта
  */
-const onLogout = async () => {
+const onLogout = async (): Promise<void> => {
   logout();
   await router.push({ name: 'login' });
 }
@@ -19,13 +19,13 @@ const onLogout = async () => {
 /**
  * Переход на страницу поиска пользователей
  */
-const onSearch = async () => {
+const onSearch = async (): Promise<void> => {
   await router.push({ name: 'user.search' });
 }
 
 // Слушатель события авторизации
 // Получаем из события ник для отображения в шапке
-window.addEventListener('auth', (event: any) => {
+window.addEventListener('auth', (event: any): void => {
   nick.value = event.detail.nick;
 });
 </script>

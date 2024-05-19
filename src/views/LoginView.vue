@@ -4,16 +4,22 @@ import AppInput from "components/AppInput.vue";
 import { ref } from "vue";
 import { login } from "services/authService.ts";
 import { useRouter } from "vue-router";
+import { useLoading } from "composables/loading.ts";
 
+const { unique } = useLoading();
 const router = useRouter();
 const nick = ref<string>('');
 const password = ref<string>('');
 
-const onLogin = async (event: Event): Promise<void> => {
+const onLogin = (event: Event): void => {
   event.preventDefault();
-  if (await login(nick.value, password.value)) {
-    await router.push({ name: 'chat.list' });
-  }
+
+  // Блокируем параллельное выполнение кода
+  unique(async (): Promise<void> => {
+    if (await login(nick.value, password.value)) {
+      await router.push({ name: 'chat.list' });
+    }
+  }, undefined);
 }
 </script>
 

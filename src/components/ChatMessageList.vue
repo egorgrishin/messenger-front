@@ -50,7 +50,7 @@ watch(() => props.inputHeight, (value: number, oldValue: number) => {
  * Добавляет новое сообщения в чат
  * @param message Добавляемое сообщени
  */
-const addMessage: (message: Message) => void = (message: Message): void => {
+const addMessage = (message: Message): void => {
   const list: HTMLElement = itemsList.value as HTMLElement;
   const scrolled: number = list.clientHeight + list.scrollTop;
   items.value.push(message);
