@@ -3,9 +3,10 @@ import { AxiosInstance } from "axios";
 import { checkAuth } from "services/authService.ts";
 import Notify from "composables/notify.ts";
 
+const host: string = import.meta.env.HOST ?? 'http://127.0.0.1'
 const port: number = import.meta.env.PROD ? 9001 : 80;
 const request: AxiosInstance = axios.create({
-  baseURL: 'http://127.0.0.1:' + port,
+  baseURL: host + ':' + port,
 });
 
 request.interceptors.request.use(onRequestFulfilledHandler);
