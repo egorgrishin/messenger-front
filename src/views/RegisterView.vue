@@ -25,7 +25,7 @@ const onRegister = (event: Event): void => {
       return;
     }
     await login(nick.value, password.value)
-      ? await router.push({ name: 'chat.list' })
+      ? await router.push({ name: 'chat.index' })
       : await router.push({ name: 'login' });
   }, undefined)
 }

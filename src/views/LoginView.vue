@@ -17,7 +17,7 @@ const onLogin = (event: Event): void => {
   // Блокируем параллельное выполнение кода
   unique(async (): Promise<void> => {
     if (await login(nick.value, password.value)) {
-      await router.push({ name: 'chat.list' });
+      await router.push({ name: 'chat.index' });
     }
   }, undefined);
 }

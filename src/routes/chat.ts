@@ -6,12 +6,12 @@ const MessageListView = () => import('views/ChatView.vue');
 export default [
   {
     path: '/chats',
-    name: 'chat.list',
+    name: 'chat.index',
     component: ChatListView,
   },
   {
     path: '/chats/:chatId',
-    name: 'message.list',
+    name: 'chat.show',
     component: MessageListView,
     props: (route: RouteLocationNormalized) => ({
       chatId: route.params.chatId,

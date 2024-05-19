@@ -8,7 +8,7 @@ const props = defineProps<{
 
 <template>
   <div class="chat__header">
-    <RouterLink :to="{ name: 'chat.list' }">
+    <RouterLink :to="{ name: 'chat.index' }">
       <AppSvgBack size="1.1rem" fill="#212121" />
     </RouterLink>
 

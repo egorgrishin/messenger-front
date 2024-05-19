@@ -54,7 +54,7 @@ const onClick = (user: User): void => {
     if (!chat) return;
 
     await router.push({
-      name: 'message.list',
+      name: 'chat.show',
       params: {
         chatId: +(chat.id),
       },

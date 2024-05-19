@@ -20,7 +20,7 @@ const onLogout = async (): Promise<void> => {
  * Переход на страницу поиска пользователей
  */
 const onSearch = async (): Promise<void> => {
-  await router.push({ name: 'user.search' });
+  await router.push({ name: 'user.index' });
 }
 
 // Слушатель события авторизации

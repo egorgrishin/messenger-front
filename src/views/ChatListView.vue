@@ -29,7 +29,7 @@ loadItems().then(() => isLoaded.value = true);
 // Направляет на страницу чатов
 const openChat = async (chat: Chat): Promise<void> => {
   await router.push({
-    name: 'message.list',
+    name: 'chat.show',
     params: {
       chatId: +(chat.id),
     },
