@@ -3,8 +3,9 @@ import { AxiosInstance } from "axios";
 import { checkAuth } from "services/authService.ts";
 import Notify from "composables/notify.ts";
 
+const port: number = process.env.NODE_ENV === 'production' ? 9001 : 80;
 const request: AxiosInstance = axios.create({
-  baseURL: 'http://127.0.0.1:80',
+  baseURL: 'http://127.0.0.1:' + port,
 });
 
 request.interceptors.request.use(onRequestFulfilledHandler);
