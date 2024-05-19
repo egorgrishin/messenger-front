@@ -34,6 +34,7 @@ button {
   font-family: inherit;
   cursor: pointer;
   transition: 0.1s;
+  outline: none;
 }
 
 button:hover {
