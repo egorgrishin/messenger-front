@@ -54,18 +54,12 @@ const addMessage = (message: Message): void => {
   const list: HTMLElement = itemsList.value as HTMLElement;
   const scrolled: number = list.clientHeight + list.scrollTop;
   const height: number = list.scrollHeight;
-  console.log(1, scrolled, height);
-
   items.value.push(message);
 
-  console.log(2, scrolled, height);
   // Если пользователь находился внизу списка
-  if (scrolled === height) {
+  if (scrolled + 2 > height) {
     // То ожидаем тик, чтобы проскролить до нового сообщения
-    nextTick().then(() => {
-      console.log(3, scrolled, height);
-      setScroll(0)
-    });
+    nextTick().then(() => setScroll(0));
   }
 }
 
