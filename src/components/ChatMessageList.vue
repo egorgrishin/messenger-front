@@ -128,6 +128,7 @@ defineExpose({
 }
 
 .right {
+  background: #f7f7f7;
   text-align: right;
   align-self: flex-end;
 }
