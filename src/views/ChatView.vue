@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getEcho } from "@/helper";
+import Sound from "assets/new-message.mp3";
 import { findChat } from "services/chatService.ts";
 import { computed, onUnmounted, ref } from "vue";
 import { Chat, Message } from "interfaces/chat";
@@ -48,6 +49,9 @@ getEcho()
   .listen('.message.new', (message: Message) => {
     // Добавляем сообщение в чат, если оно пришло от собеседника
     if (message.userId !== userId) {
+      if (document.visibilityState === 'hidden') {
+        new Audio(Sound).play();
+      }
       addMessage(message);
     }
   });
