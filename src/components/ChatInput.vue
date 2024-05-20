@@ -52,6 +52,7 @@ const onSubmit = (): void => {
   unique(async (): Promise<void> => {
     // Вызываем функцию onInput, чтобы сбросить размер textarea до исходного
     text.value = '';
+    textarea.value?.focus();
 
     nextTick(onInput).then();
     const createdMessage = await createMessage(props.chatId, message);
