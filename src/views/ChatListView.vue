@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getEcho } from "@/helper";
+import Sound from "assets/new-message.mp3";
 import { useList } from "composables/list";
 import { Chat } from "interfaces/chat";
 import { getUserChats } from "services/chatService.ts";
@@ -42,6 +43,9 @@ getEcho()
   .listen('.chat.updated', async (updatedChat: Chat) => {
     items.value = items.value.filter((chat: Chat) => chat.id != updatedChat.id);
     items.value.unshift(updatedChat);
+    if (document.visibilityState === 'hidden') {
+      await new Audio(Sound).play();
+    }
   });
 onUnmounted(() => getEcho().leave(channel));
 </script>
