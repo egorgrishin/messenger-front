@@ -81,7 +81,7 @@ onUnmounted(() => getEcho().leave(channel));
 @import "assets/vars";
 
 .chat {
-  height: 100%;
+  height: calc(100% + 1rem);
   margin-top: -1rem;
   display: flex;
   flex-direction: column;
