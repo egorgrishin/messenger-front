@@ -102,6 +102,7 @@ defineExpose({
 
   div:not(.messages-list__empty-block) {
     white-space: pre-wrap;
+    word-wrap: break-word;
     text-align: left;
     max-width: 70%;
     padding: 0.5rem 1rem;
