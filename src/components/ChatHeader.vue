@@ -17,7 +17,7 @@ const props = defineProps<{
 </template>
 
 <style scoped lang="scss">
-@import "assets/vars";
+@use "assets/vars" as *;
 
 .chat__header {
   height: $chat-header-height;

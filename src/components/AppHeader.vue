@@ -51,7 +51,7 @@ window.addEventListener('auth', (event: any): void => {
 </template>
 
 <style lang="scss" scoped>
-@import "assets/vars";
+@use "assets/vars" as *;
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap');
 
 header {

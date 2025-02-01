@@ -92,7 +92,7 @@ defineExpose({
 </template>
 
 <style scoped lang="scss">
-@import "assets/vars";
+@use "assets/vars" as *;
 
 .chat__messages-list {
   display: flex;

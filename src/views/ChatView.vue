@@ -78,7 +78,7 @@ onUnmounted(() => getEcho().leave(channel));
 </template>
 
 <style scoped lang="scss">
-@import "assets/vars";
+@use "assets/vars" as *;
 
 .chat {
   height: calc(100% + 1rem);
