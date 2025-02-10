@@ -5,8 +5,8 @@ import Notify from "composables/notify.ts";
 /**
  * Авторизация
  */
-async function login(nick: string, password: string): Promise<boolean> {
-  const response: AxiosLogin = await apiLogin(nick, password);
+async function login(email: string, password: string): Promise<boolean> {
+  const response: AxiosLogin = await apiLogin(email, password);
   if (response.status === 200) {
     saveAuthData(response.data);
     return true;

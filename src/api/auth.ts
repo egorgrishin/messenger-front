@@ -4,9 +4,9 @@ import { AxiosLogin } from "interfaces/auth";
 /**
  * Отправляет POST запрос на авторизацию
  */
-export async function apiLogin(nick: string, password: string): Promise<AxiosLogin> {
+export async function apiLogin(email: string, password: string): Promise<AxiosLogin> {
   return await request
-    .post('/api/v1/login', { nick, password })
+    .post('/api/v1/access', { email, password })
     .then((response: AxiosLogin) => response)
     .catch((error: any) => error.response);
 }

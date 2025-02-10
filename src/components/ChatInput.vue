@@ -20,6 +20,8 @@ const emit = defineEmits<{
 const { unique } = useLoading();
 const textarea = ref<HTMLTextAreaElement | null>(null);
 const text = ref<string>('');
+const isOpened = ref<boolean>(false);
+const openedFiles = ref<File[]>([]);
 
 // Толщина границы textarea
 const border: number = 1;
@@ -38,6 +40,34 @@ const onInput = (): void => {
   height.value = textarea.value.offsetHeight;
 }
 onMounted(onInput);
+
+const onSelectFile = (type: string): void => {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.multiple = true;
+  input.accept = type;
+
+  input.onchange = () => {
+    const list: FileList | null = input.files;
+    if (!list) {
+      return;
+    }
+
+    openedFiles.value.push(...list)
+    console.log(openedFiles.value)
+  };
+
+  input.click();
+  // close();
+};
+
+const open = (): void => {
+  isOpened.value = true;
+}
+
+const close = (): void => {
+  isOpened.value = false;
+}
 
 /**
  * Отвправляет сообщение
@@ -65,6 +95,28 @@ const onSubmit = (): void => {
 
 <template>
   <div class="chat__input">
+    <div
+      @mouseover="open"
+      @mouseout="close"
+    >
+      <AppButton padding="0 0.6rem" bg="#212121">
+        <span>F</span>
+        <div
+          class="select-main"
+          :class="{
+            opened: isOpened,
+            closed: !isOpened,
+          }"
+        >
+          <div class="select-block">
+            <button @click="() => onSelectFile('image/*')">Image</button>
+            <button @click="() => onSelectFile('video/*')">Video</button>
+            <button @click="() => onSelectFile('*/*')">File</button>
+          </div>
+        </div>
+      </AppButton>
+    </div>
+
     <textarea
       ref="textarea"
       v-model="text"
@@ -81,6 +133,41 @@ const onSubmit = (): void => {
 </template>
 
 <style scoped lang="scss">
+.select-main {
+
+}
+
+.popup-block {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+
+  justify-content: center;
+  align-items: center;
+  background: #00000078;
+}
+
+.opened {
+  display: flex;
+}
+
+.closed {
+  display: none;
+}
+
+.popup-main {
+  padding: 1rem;
+  background: #fff;
+}
+
+.file-types {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
 .chat__input {
   padding-top: 0.5rem;
   display: flex;
