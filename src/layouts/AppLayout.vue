@@ -10,7 +10,7 @@ import AppHeader from "components/AppHeader.vue";
 </template>
 
 <style lang="scss" scoped>
-@import "assets/vars";
+@use "assets/vars" as *;
 
 main {
   position: relative;

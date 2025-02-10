@@ -101,7 +101,7 @@ const onClick = (user: User): void => {
 </template>
 
 <style scoped lang="scss">
-@import "assets/vars";
+@use "assets/vars" as *;
 
 .search {
   overflow-y: auto;

@@ -72,7 +72,7 @@ onUnmounted(() => getEcho().leave(channel));
 </template>
 
 <style scoped lang="scss">
-@import "assets/vars";
+@use "assets/vars" as *;
 
 .list {
   overflow-y: auto;

@@ -18,4 +18,11 @@ export default defineConfig({
       "views": '/src/views',
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern'
+      }
+    }
+  }
 })
