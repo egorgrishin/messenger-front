@@ -5,6 +5,8 @@ import { Message } from "interfaces/chat";
 import { createMessage } from "services/chatService.ts";
 import { nextTick, onMounted, ref } from "vue";
 import { useLoading } from "composables/loading.ts";
+import { createFile } from "services/fileService.ts";
+import { File as OFile } from "interfaces/file";
 
 // Высота textarea
 const height = defineModel<number>('height', {
@@ -21,7 +23,7 @@ const { unique } = useLoading();
 const textarea = ref<HTMLTextAreaElement | null>(null);
 const text = ref<string>('');
 const isOpened = ref<boolean>(false);
-const openedFiles = ref<File[]>([]);
+const openedFiles = ref<Map<string, UF>>(new Map());
 
 // Толщина границы textarea
 const border: number = 1;
@@ -41,24 +43,35 @@ const onInput = (): void => {
 }
 onMounted(onInput);
 
+interface UF {
+  fileModel: OFile,
+  userFile: File,
+}
+
 const onSelectFile = (type: string): void => {
   const input = document.createElement('input');
   input.type = 'file';
   input.multiple = true;
   input.accept = type;
 
-  input.onchange = () => {
+  input.onchange = async () => {
     const list: FileList | null = input.files;
     if (!list) {
       return;
     }
-
-    openedFiles.value.push(...list)
-    console.log(openedFiles.value)
+    for (const file of list) {
+      const uploadedFile = await createFile(file);
+      if (uploadedFile === null) {
+        continue;
+      }
+      openedFiles.value.set(uploadedFile.uuid, {
+        fileModel: uploadedFile,
+        userFile: file,
+      });
+    }
   };
 
   input.click();
-  // close();
 };
 
 const open = (): void => {
@@ -85,50 +98,65 @@ const onSubmit = (): void => {
     textarea.value?.focus();
 
     nextTick(onInput).then();
-    const createdMessage = await createMessage(props.chatId, message);
+    const createdMessage = await createMessage(props.chatId, message, Array.from(openedFiles.value.keys()));
     if (createdMessage) {
       emit('addMessage', createdMessage);
     }
   }, undefined)
 }
+
+const deleteFile = (key: string) => {
+  openedFiles.value.delete(key);
+}
 </script>
 
 <template>
   <div class="chat__input">
-    <div
-      @mouseover="open"
-      @mouseout="close"
-    >
-      <AppButton padding="0 0.6rem" bg="#212121">
-        <span>F</span>
-        <div
-          class="select-main"
-          :class="{
+    <div class="opened-files-list">
+      <div
+        class="list__user"
+        v-for="[key, file] in openedFiles"
+        @click="() => deleteFile(key)"
+      >
+        {{ file.userFile.name }}
+      </div>
+    </div>
+    <div class="chatt">
+      <div
+        @mouseover="open"
+        @mouseout="close"
+      >
+        <AppButton padding="0 0.6rem" bg="#212121">
+          <span>F</span>
+          <div
+            class="select-main"
+            :class="{
             opened: isOpened,
             closed: !isOpened,
           }"
-        >
-          <div class="select-block">
-            <button @click="() => onSelectFile('image/*')">Image</button>
-            <button @click="() => onSelectFile('video/*')">Video</button>
-            <button @click="() => onSelectFile('*/*')">File</button>
+          >
+            <div class="select-block">
+              <button @click="() => onSelectFile('image/*')">Image</button>
+              <button @click="() => onSelectFile('video/*')">Video</button>
+              <button @click="() => onSelectFile('*/*')">File</button>
+            </div>
           </div>
-        </div>
+        </AppButton>
+      </div>
+
+      <textarea
+        ref="textarea"
+        v-model="text"
+        @input="onInput"
+        @keydown.enter.exact.prevent
+        @keyup.enter.exact="onSubmit"
+        rows="1"
+      ></textarea>
+
+      <AppButton @click="onSubmit" padding="0 0.6rem" bg="#212121">
+        <AppSvgSend size="1.35rem" fill="#fff" />
       </AppButton>
     </div>
-
-    <textarea
-      ref="textarea"
-      v-model="text"
-      @input="onInput"
-      @keydown.enter.exact.prevent
-      @keyup.enter.exact="onSubmit"
-      rows="1"
-    ></textarea>
-
-    <AppButton @click="onSubmit" padding="0 0.6rem" bg="#212121">
-      <AppSvgSend size="1.35rem" fill="#fff" />
-    </AppButton>
   </div>
 </template>
 
@@ -168,7 +196,11 @@ const onSubmit = (): void => {
   align-items: stretch;
 }
 
-.chat__input {
+.opened-files-list {
+
+}
+
+.chatt {
   padding-top: 0.5rem;
   display: flex;
   gap: 1rem;

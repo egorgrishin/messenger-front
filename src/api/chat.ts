@@ -45,9 +45,9 @@ export async function apiGetUserChats(userId: number, startMessageId: number | n
 /**
  * Отправляет POST запрос на создание нового сообщения
  */
-export async function apiCreateMessage(chatId: number, text: string): Promise<AxiosCreateMessage> {
+export async function apiCreateMessage(chatId: number, text: string | null, fileUuids: string[] | null): Promise<AxiosCreateMessage> {
   return await request
-    .post(`/api/v1/messages`, { chatId, text })
+    .post(`/api/v1/messages`, { chatId, text, fileUuids })
     .then((response: AxiosCreateMessage) => response)
     .catch((error: any) => error.response);
 }
