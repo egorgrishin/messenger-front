@@ -6,18 +6,18 @@ async function createFile(file: File): Promise<OFile | null> {
   const userId = +(localStorage.getItem('userId') ?? 0);
   if (!userId) {
     Notify.send('[Incorrect userId]');
-    return null;
+    return Promise.reject(null);
   }
 
   const response: AxiosCreateFile = await apiCreateFile(userId, file);
   const isSuccess = response.status === 201;
 
   if (isSuccess) {
-    return response.data.data;
+    return Promise.resolve(response.data.data);
   }
 
   Notify.send('Ошибка сохранения');
-  return null;
+  return Promise.reject(null);
 }
 
 export {

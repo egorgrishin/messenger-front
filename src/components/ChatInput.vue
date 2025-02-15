@@ -23,7 +23,7 @@ const { unique } = useLoading();
 const textarea = ref<HTMLTextAreaElement | null>(null);
 const text = ref<string>('');
 const isOpened = ref<boolean>(false);
-const openedFiles = ref<Map<string, UF>>(new Map());
+const openedFiles = ref<UF[]>([]);
 
 // Толщина границы textarea
 const border: number = 1;
@@ -60,14 +60,16 @@ const onSelectFile = (type: string): void => {
       return;
     }
     for (const file of list) {
-      const uploadedFile = await createFile(file);
-      if (uploadedFile === null) {
-        continue;
-      }
-      openedFiles.value.set(uploadedFile.uuid, {
-        fileModel: uploadedFile,
-        userFile: file,
-      });
+      createFile(file)
+        .then((uploadedFile: OFile) => {
+          openedFiles.value.push({
+            fileModel: uploadedFile,
+            userFile: file,
+          });
+        })
+        .catch((error: any) => {
+          console.log(error);
+        });
     }
   };
 
@@ -87,7 +89,7 @@ const close = (): void => {
  */
 const onSubmit = (): void => {
   const message = text.value.trim();
-  if (!message) {
+  if (!message && openedFiles.value.length === 0) {
     return;
   }
 
@@ -98,7 +100,8 @@ const onSubmit = (): void => {
     textarea.value?.focus();
 
     nextTick(onInput).then();
-    const createdMessage = await createMessage(props.chatId, message, Array.from(openedFiles.value.keys()));
+    const fileUuids = openedFiles.value.map((f: UF) => f.fileModel.uuid);
+    const createdMessage = await createMessage(props.chatId, message, fileUuids);
     if (createdMessage) {
       emit('addMessage', createdMessage);
     }
