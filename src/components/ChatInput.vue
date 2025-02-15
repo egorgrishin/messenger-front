@@ -109,7 +109,7 @@ const onSubmit = (): void => {
 }
 
 const deleteFile = (key: string) => {
-  openedFiles.value.delete(key);
+  openedFiles.value = openedFiles.value.filter((f: UF) => f.fileModel.uuid !== key);
 }
 </script>
 
@@ -118,8 +118,8 @@ const deleteFile = (key: string) => {
     <div class="opened-files-list">
       <div
         class="list__user"
-        v-for="[key, file] in openedFiles"
-        @click="() => deleteFile(key)"
+        v-for="file in openedFiles"
+        @click="() => deleteFile(file.fileModel.uuid)"
       >
         {{ file.userFile.name }}
       </div>

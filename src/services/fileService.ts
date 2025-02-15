@@ -2,7 +2,7 @@ import Notify from "composables/notify";
 import { apiCreateFile } from "api/file";
 import { AxiosCreateFile, File as OFile } from "interfaces/file";
 
-async function createFile(file: File): Promise<OFile | null> {
+async function createFile(file: File): Promise<OFile> {
   const userId = +(localStorage.getItem('userId') ?? 0);
   if (!userId) {
     Notify.send('[Incorrect userId]');
