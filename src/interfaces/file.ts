@@ -1,8 +1,17 @@
 import { AxiosResponse } from "axios";
 
-export interface File {
+export interface FileModel {
   uuid: string,
   type: number,
+  url: string,
+  videoPreviewUrl: string | null,
+  filename: string,
 }
 
-export type AxiosCreateFile = AxiosResponse<{ data: File }>;
+export interface InputFile {
+  uuid: string,
+  model: FileModel | null,
+  original: File,
+}
+
+export type AxiosCreateFile = AxiosResponse<{ data: FileModel }>;

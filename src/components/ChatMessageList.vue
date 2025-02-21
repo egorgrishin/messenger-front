@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { Direction, useList } from "composables/list";
-import { Chat, Message } from "interfaces/chat";
-import { getChatMessages } from "services/chatService.ts";
-import { nextTick, ref, watch } from "vue";
+import { Direction, useList } from 'composables/list';
+import { Chat, Message } from 'interfaces/chat';
+import { getChatMessages } from 'services/chatService.ts';
+import { nextTick, ref, watch } from 'vue';
+import ChatMessageItem from 'components/ChatMessageItem.vue';
 
 const props = defineProps<{
   userId: number,
@@ -22,7 +23,7 @@ const {
   direction: Direction.Up,
   itemsGetter: (lastId: number | null): Promise<Message[] | null> => {
     return getChatMessages(props.chat.id, lastId)
-      .then((messages: Message[] | null) => messages?.reverse() ?? null)
+      .then((messages: Message[] | null) => messages?.reverse() ?? null);
   },
   lastIdGetter: (items: Message[]) => items[0].id,
 });
@@ -61,7 +62,7 @@ const addMessage = (message: Message): void => {
     // То ожидаем тик, чтобы проскролить до нового сообщения
     nextTick().then(() => setScroll(0));
   }
-}
+};
 
 defineExpose({
   addMessage,
@@ -78,16 +79,12 @@ defineExpose({
     </h3>
     <div class="messages-list__empty-block" />
 
-    <div
+    <ChatMessageItem
       v-for="message in items"
       :key="message.id"
-      :class="{
-        left: message.userId !== userId,
-        right: message.userId === userId,
-      }"
-    >
-      <span>{{ message.text }}</span>
-    </div>
+      :message="message"
+      :user-id="userId"
+    />
   </div>
 </template>
 
@@ -99,17 +96,6 @@ defineExpose({
   flex-direction: column;
   flex-grow: 1;
   overflow-y: auto;
-
-  div:not(.messages-list__empty-block) {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    text-align: left;
-    max-width: 70%;
-    padding: 0.5rem 1rem;
-    border: 1px solid #ddd;
-    border-radius: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
 }
 
 .messages-list {
@@ -121,16 +107,5 @@ defineExpose({
     font-weight: 500;
     margin-top: 0.5rem;
   }
-}
-
-.left {
-  text-align: left;
-  align-self: flex-start;
-}
-
-.right {
-  background: #f7f7f7;
-  text-align: right;
-  align-self: flex-end;
 }
 </style>

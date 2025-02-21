@@ -55,11 +55,11 @@ async function getUserChats(userId: number, startMessageId: number | null = null
 /**
  * Отправляет сообщение
  */
-async function createMessage(chatId: number, text: string | null, fileUuids: string[] | null): Promise<Message | null> {
-  if (!text && !fileUuids) {
-    Notify.send('[Fill message data]')
-    return null;
-  }
+async function createMessage(
+  chatId: number,
+  text: string | null,
+  fileUuids: string[] | null = null,
+): Promise<Message | null> {
   const response: AxiosCreateMessage = await apiCreateMessage(chatId, text, fileUuids);
   if (response.status === 201) {
     return response.data.data;

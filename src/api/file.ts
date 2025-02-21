@@ -1,8 +1,9 @@
 import { request } from "@/axios.config";
 import { AxiosCreateFile } from "interfaces/file";
 
-export async function apiCreateFile(userId: number, file: File): Promise<AxiosCreateFile> {
+export async function apiCreateFile(uuid: string, userId: number, file: File): Promise<AxiosCreateFile> {
   const formData = new FormData();
+  formData.append('uuid', uuid);
   formData.append('userId', String(userId));
   formData.append('file', file);
 

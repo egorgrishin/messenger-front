@@ -1,23 +1,23 @@
 import Notify from "composables/notify";
 import { apiCreateFile } from "api/file";
-import { AxiosCreateFile, File as OFile } from "interfaces/file";
+import { AxiosCreateFile, FileModel } from "interfaces/file";
 
-async function createFile(file: File): Promise<OFile> {
-  const userId = +(localStorage.getItem('userId') ?? 0);
+async function createFile(uuid: string, file: File): Promise<FileModel> {
+  const userId = +(localStorage.getItem('userId') || 0);
   if (!userId) {
-    Notify.send('[Incorrect userId]');
-    return Promise.reject(null);
+    Notify.send('Не получилось сохранить файл');
+    return Promise.reject(uuid);
   }
 
-  const response: AxiosCreateFile = await apiCreateFile(userId, file);
+  const response: AxiosCreateFile = await apiCreateFile(uuid, userId, file);
   const isSuccess = response.status === 201;
 
   if (isSuccess) {
     return Promise.resolve(response.data.data);
   }
 
-  Notify.send('Ошибка сохранения');
-  return Promise.reject(null);
+  Notify.send('Не получилось сохранить файл');
+  return Promise.reject(uuid);
 }
 
 export {

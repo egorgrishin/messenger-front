@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getEcho } from "@/helper";
+import { getEcho } from "@/helper/socket";
 import Sound from "assets/new-message.mp3";
 import { findChat } from "services/chatService.ts";
 import { computed, onUnmounted, ref } from "vue";

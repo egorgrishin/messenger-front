@@ -12,6 +12,8 @@ import AppNotify from "components/AppNotify.vue";
 </template>
 
 <style lang="scss">
+@use "@fancyapps/ui/dist/fancybox/fancybox.css" as *;
+
 #app {
   height: 100%;
   width: 100%;

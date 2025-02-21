@@ -1,5 +1,6 @@
 import { User } from "interfaces/user";
 import { AxiosResponse } from "axios";
+import { FileModel } from 'interfaces/file.ts';
 
 export interface Message {
   id: number,
@@ -7,6 +8,7 @@ export interface Message {
   userId: number,
   text: string,
   createdAt: string
+  files: FileModel[],
 }
 
 export interface Chat {

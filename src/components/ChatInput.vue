@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import AppButton from "components/AppButton.vue";
-import AppSvgSend from "components/AppIconSend.vue";
-import { Message } from "interfaces/chat";
-import { createMessage } from "services/chatService.ts";
-import { nextTick, onMounted, ref } from "vue";
-import { useLoading } from "composables/loading.ts";
-import { createFile } from "services/fileService.ts";
-import { File as OFile } from "interfaces/file";
+import AppButton from 'components/AppButton.vue';
+import AppSvgSend from 'components/AppIconSend.vue';
+import { Message } from 'interfaces/chat';
+import { createMessage } from 'services/chatService';
+import { nextTick, onMounted, ref } from 'vue';
+import { useLoading } from 'composables/loading';
+import { InputFile } from 'interfaces/file';
+import AppIconPlus from 'components/AppIconPlus.vue';
+import ChatInputFiles from 'components/ChatInputFiles.vue';
+import { Types } from '@/helper/file.ts';
 
 // Высота textarea
 const height = defineModel<number>('height', {
@@ -22,8 +24,8 @@ const emit = defineEmits<{
 const { unique } = useLoading();
 const textarea = ref<HTMLTextAreaElement | null>(null);
 const text = ref<string>('');
-const isOpened = ref<boolean>(false);
-const openedFiles = ref<UF[]>([]);
+const files = ref<Map<string, InputFile>>(new Map());
+const inputFiles = ref<InstanceType<typeof ChatInputFiles> | null>(null);
 
 // Толщина границы textarea
 const border: number = 1;
@@ -40,56 +42,28 @@ const onInput = (): void => {
   const heightPx = textarea.value.scrollHeight + border * 2;
   textarea.value.style.height = `${heightPx}px`;
   height.value = textarea.value.offsetHeight;
-}
+};
 onMounted(onInput);
 
-interface UF {
-  fileModel: OFile,
-  userFile: File,
-}
-
-const onSelectFile = (type: string): void => {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.multiple = true;
-  input.accept = type;
-
-  input.onchange = async () => {
-    const list: FileList | null = input.files;
-    if (!list) {
-      return;
-    }
-    for (const file of list) {
-      createFile(file)
-        .then((uploadedFile: OFile) => {
-          openedFiles.value.push({
-            fileModel: uploadedFile,
-            userFile: file,
-          });
-        })
-        .catch((error: any) => {
-          console.log(error);
-        });
-    }
-  };
-
-  input.click();
-};
-
-const open = (): void => {
-  isOpened.value = true;
-}
-
-const close = (): void => {
-  isOpened.value = false;
+const addMessage = async (message: string | null, fileUuids: string[] | null = null): Promise<void> => {
+  const createdMessage = await createMessage(props.chatId, message, fileUuids);
+  if (createdMessage) {
+    emit('addMessage', createdMessage);
+  }
 }
 
 /**
  * Отвправляет сообщение
  */
 const onSubmit = (): void => {
-  const message = text.value.trim();
-  if (!message && openedFiles.value.length === 0) {
+  let message: string | null = text.value.trim();
+  if (!message && files.value.size === 0) {
+    return;
+  }
+
+  const inputFiles = Array.from(files.value.values());
+  const unloadedFiles = inputFiles.filter(file => !file.model);
+  if (unloadedFiles.length > 0) {
     return;
   }
 
@@ -98,54 +72,34 @@ const onSubmit = (): void => {
     // Вызываем функцию onInput, чтобы сбросить размер textarea до исходного
     text.value = '';
     textarea.value?.focus();
-
     nextTick(onInput).then();
-    const fileUuids = openedFiles.value.map((f: UF) => f.fileModel.uuid);
-    const createdMessage = await createMessage(props.chatId, message, fileUuids);
-    if (createdMessage) {
-      emit('addMessage', createdMessage);
-    }
-  }, undefined)
-}
 
-const deleteFile = (key: string) => {
-  openedFiles.value = openedFiles.value.filter((f: UF) => f.fileModel.uuid !== key);
-}
+    const fileUuids = inputFiles.map(file => file.uuid);
+    files.value.clear();
+
+    for (let i = 0; i < fileUuids.length; i += Types.MAX_IN_MESSAGE) {
+      let batchUuids = inputFiles.slice(i, i + Types.MAX_IN_MESSAGE).map(file => file.uuid);
+      await addMessage(message, batchUuids);
+      message = null;
+    }
+
+    if (message !== null) {
+      await addMessage(message);
+    }
+  }, undefined);
+};
 </script>
 
 <template>
   <div class="chat__input">
-    <div class="opened-files-list">
-      <div
-        class="list__user"
-        v-for="file in openedFiles"
-        @click="() => deleteFile(file.fileModel.uuid)"
-      >
-        {{ file.userFile.name }}
-      </div>
-    </div>
-    <div class="chatt">
-      <div
-        @mouseover="open"
-        @mouseout="close"
-      >
-        <AppButton padding="0 0.6rem" bg="#212121">
-          <span>F</span>
-          <div
-            class="select-main"
-            :class="{
-            opened: isOpened,
-            closed: !isOpened,
-          }"
-          >
-            <div class="select-block">
-              <button @click="() => onSelectFile('image/*')">Image</button>
-              <button @click="() => onSelectFile('video/*')">Video</button>
-              <button @click="() => onSelectFile('*/*')">File</button>
-            </div>
-          </div>
-        </AppButton>
-      </div>
+    <ChatInputFiles
+      ref="inputFiles"
+      v-model:files="files"
+    />
+    <div class="chat__input-area">
+      <AppButton @click="inputFiles?.onSelectFile" padding="0 0.6rem" bg="#212121">
+        <AppIconPlus size="1.35rem" fill="#fff" />
+      </AppButton>
 
       <textarea
         ref="textarea"
@@ -164,46 +118,7 @@ const deleteFile = (key: string) => {
 </template>
 
 <style scoped lang="scss">
-.select-main {
-
-}
-
-.popup-block {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-
-  justify-content: center;
-  align-items: center;
-  background: #00000078;
-}
-
-.opened {
-  display: flex;
-}
-
-.closed {
-  display: none;
-}
-
-.popup-main {
-  padding: 1rem;
-  background: #fff;
-}
-
-.file-types {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
-
-.opened-files-list {
-
-}
-
-.chatt {
+.chat__input-area {
   padding-top: 0.5rem;
   display: flex;
   gap: 1rem;

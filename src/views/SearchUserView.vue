@@ -12,7 +12,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useLoading } from "composables/loading.ts";
 
 // ID текущего пользователя
-const userId: number = +(localStorage.getItem('userId') ?? 0);
+const userId: number = +(localStorage.getItem('userId') || 0);
 const router = useRouter();
 const route = useRoute();
 const nick = ref<string>(route.query.q?.toString() ?? '');
