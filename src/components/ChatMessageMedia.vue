@@ -57,16 +57,15 @@ const showGallery = (startIndex: number): void => {
     <div
       class="message__media-item media__show-more"
       v-if="mediaFiles.length > MAX_MEDIA_FILES"
+      @click="showGallery(INDEX_LAST_FILE)"
     >
       <img
         v-if="info.darkenedFile && Types.isImageByModel(info.darkenedFile)"
         :src="info.darkenedFile.url"
-        @click="showGallery(INDEX_LAST_FILE)"
       />
       <img
         v-else
         :src="info.darkenedFile?.videoPreviewUrl ?? 'not-found'"
-        @click="showGallery(INDEX_LAST_FILE)"
       />
       <span>+{{ info.count - INDEX_LAST_FILE }}</span>
     </div>
