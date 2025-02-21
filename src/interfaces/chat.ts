@@ -9,6 +9,7 @@ export interface Message {
   text: string,
   createdAt: string
   files: FileModel[],
+  filesCount: number | null,
 }
 
 export interface Chat {

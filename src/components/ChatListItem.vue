@@ -36,9 +36,9 @@ const getChatText = (): string => {
   if (props.chat.lastMessage?.text) {
     return props.chat.lastMessage?.text;
   }
-  if (props.chat.lastMessage?.files?.length) {
-    const count = props.chat.lastMessage?.files?.length;
-    const word = num2word(props.chat.lastMessage.files.length, ['файл', 'файла', 'файлов']);
+  if (props.chat.lastMessage?.filesCount) {
+    const count = props.chat.lastMessage?.filesCount;
+    const word = num2word(count, ['файл', 'файла', 'файлов']);
     return `${count} ${word}`;
   }
   return 'Сообщений нет';
