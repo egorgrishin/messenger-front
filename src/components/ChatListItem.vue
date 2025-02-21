@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Chat } from "interfaces/chat";
 import { User } from "interfaces/user";
+import { num2word } from "@/helper/word.ts";
 
 // ID текущего пользователя
 const userId: number = +(localStorage.getItem('userId') || 0);
@@ -30,6 +31,18 @@ const getFormattedDate: (datetime: string) => string = (datetime: string): strin
   const minutes: string = parse(date.getMinutes());
   return `${day}.${month} ${hours}:${minutes}`;
 };
+
+const getChatText = (): string => {
+  if (props.chat.lastMessage?.text) {
+    return props.chat.lastMessage?.text;
+  }
+  if (props.chat.lastMessage?.files?.length) {
+    const count = props.chat.lastMessage?.files?.length;
+    const word = num2word(props.chat.lastMessage.files.length, ['файл', 'файла', 'файлов']);
+    return `${count} ${word}`;
+  }
+  return 'Сообщений нет';
+}
 </script>
 
 <template>
@@ -51,7 +64,7 @@ const getFormattedDate: (datetime: string) => string = (datetime: string): strin
             v-if="props.chat.lastMessage?.userId === userId"
             class="preview__message-author"
           >Вы:</span>
-          {{ props.chat.lastMessage?.text || 'Сообщений нет' }}
+          {{ getChatText() }}
         </span>
     </div>
   </div>
