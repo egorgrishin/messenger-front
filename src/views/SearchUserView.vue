@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AppButton from "components/AppButton.vue";
-import AppSvgSearch from "components/AppIconSearch.vue";
+import AppSvgSearch from "components/icons/AppIconSearch.vue";
 import AppInput from "components/AppInput.vue";
 import { useList } from "composables/list";
 import { Chat } from "interfaces/chat";

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import AppSvgLogout from "components/AppIconLogout.vue";
-import AppSvgPlus from "components/AppIconPlus.vue";
+import AppSvgLogout from "components/icons/AppIconLogout.vue";
+import AppSvgPlus from "components/icons/AppIconPlus.vue";
 import { logout } from "services/authService.ts";
 import { Router, useRouter } from "vue-router";
 import { ref } from "vue";

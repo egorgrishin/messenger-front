@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppSvgBack from "components/AppIconBack.vue";
+import AppSvgBack from "components/icons/AppIconBack.vue";
 
 const props = defineProps<{
   title?: string,

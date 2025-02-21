@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import AppButton from 'components/AppButton.vue';
-import AppSvgSend from 'components/AppIconSend.vue';
+import AppSvgSend from 'components/icons/AppIconSend.vue';
 import { Message } from 'interfaces/chat';
 import { createMessage } from 'services/chatService';
 import { nextTick, onMounted, ref } from 'vue';
 import { useLoading } from 'composables/loading';
 import { InputFile } from 'interfaces/file';
-import AppIconPlus from 'components/AppIconPlus.vue';
+import AppIconPlus from 'components/icons/AppIconPlus.vue';
 import ChatInputFiles from 'components/ChatInputFiles.vue';
 import { Types } from '@/helper/file.ts';
 
