@@ -46,7 +46,7 @@ const addMessage = (message: Message): void => {
 const channel: string = `chats.${chatId}`;
 getEcho()
   .private(channel)
-  .listen('.message.new', (message: Message) => {
+  .listen('.message.created', (message: Message) => {
     // Добавляем сообщение в чат, если оно пришло от собеседника
     if (message.userId !== userId) {
       if (document.visibilityState === 'hidden') {

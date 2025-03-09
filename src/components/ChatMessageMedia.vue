@@ -70,7 +70,6 @@ const showGallery = (startIndex: number): void => {
       <span>+{{ info.count - INDEX_LAST_FILE }}</span>
     </div>
   </div>
-
 </template>
 
 <style scoped lang="scss">
