@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import AppIconClose from "components/icons/AppIconClose.vue";
 import { User } from "interfaces/user.ts";
-import { Chat } from "interfaces/chat.ts";
 import { useRoute, useRouter } from "vue-router";
 import Online from "composables/online.ts";
 
