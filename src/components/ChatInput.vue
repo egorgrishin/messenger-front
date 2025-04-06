@@ -18,15 +18,9 @@ import Notify from "composables/notify.ts";
 const height = defineModel<number>('height', {
   required: true,
 });
-// todo наблюдатель со сбросом
-// todo наблюдатель со сбросом
+
 const props = defineProps<{
   chatId: number,
-}>();
-const emit = defineEmits<{
-  // (e: 'addMessage', message: Message): void
-  // (e: 'updateMessage', message: Message): void
-  // (e: 'deleteMessage', messageId: number): void
 }>();
 
 const { unique } = useLoading();
