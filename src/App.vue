@@ -1,12 +1,23 @@
 <script setup lang="ts">
-import AppLayout from "layouts/AppLayout.vue";
+import MessengerLayout from "layouts/MessengerLayout.vue";
 import AppNotify from "components/AppNotify.vue";
+import { computed } from "vue";
+import EmptyLayout from "./layouts/EmptyLayout.vue";
+import { useRoute } from "vue-router";
+
+const layouts = {
+  messenger: MessengerLayout,
+  empty: EmptyLayout,
+}
+
+const route = useRoute();
+const layout = computed(() => layouts[route.meta.layout as keyof typeof layouts]);
 </script>
 
 <template>
-  <AppLayout>
+  <component :is="layout">
     <RouterView />
-  </AppLayout>
+  </component>
 
   <AppNotify />
 </template>
@@ -17,14 +28,11 @@ import AppNotify from "components/AppNotify.vue";
 #app {
   height: 100%;
   width: 100%;
-  max-width: 560px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  background: #ffffff;
   color: #212121;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.04);
-  border: 1px solid #e9e9e9;
 }
 </style>

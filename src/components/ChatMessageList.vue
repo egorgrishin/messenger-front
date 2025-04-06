@@ -11,7 +11,10 @@ const props = defineProps<{
   inputHeight: number,
 }>();
 
-// Завершился ли API запрос на получеение сообщений
+const emit = defineEmits<{
+  (e: 'editMessage', message: Message): void
+}>();
+
 const isLoaded = ref<boolean>(false);
 
 const {
@@ -19,9 +22,11 @@ const {
   items,     // Список сообщений
   loadItems, // Функция загрузки сообщений
   setScroll, // Функция для скролла списка сообщений
+  reset,
 } = useList<Message>({
   direction: Direction.Up,
-  itemsGetter: (lastId: number | null): Promise<Message[] | null> => {
+  itemsGetter: async (lastId: number | null): Promise<Message[] | null> => {
+    console.log(props.chat.id);
     return getChatMessages(props.chat.id, lastId)
       .then((messages: Message[] | null) => messages?.reverse() ?? null);
   },
@@ -49,7 +54,6 @@ watch(() => props.inputHeight, (value: number, oldValue: number) => {
 
 /**
  * Добавляет новое сообщения в чат
- * @param message Добавляемое сообщени
  */
 const addMessage = (message: Message): void => {
   const list: HTMLElement = itemsList.value as HTMLElement;
@@ -64,26 +68,56 @@ const addMessage = (message: Message): void => {
   }
 };
 
+/**
+ * Обновляет сообщение в списке
+ */
+const updateMessage = (updatedMessage: Message): void => {
+  items.value = items.value.map(message => message.id === updatedMessage.id ? updatedMessage : message);
+};
+
+/**
+ * Удаляет сообщение из чата
+ */
+const deleteMessage = (messageId: number): void => {
+  items.value = items.value.filter(message => message.id !== messageId);
+};
+
+const editMessage = (message: Message): void => {
+  const list: HTMLElement = itemsList.value as HTMLElement;
+  const scrolled: number = list.clientHeight + list.scrollTop;
+  const height: number = list.scrollHeight;
+
+  emit('editMessage', message);
+
+  // Если пользователь находился внизу списка
+  if (scrolled + 2 > height) {
+    // То ожидаем тик, чтобы проскролить до нового сообщения
+    nextTick().then(() => setScroll(0));
+  }
+};
+
 defineExpose({
   addMessage,
+  updateMessage,
+  deleteMessage,
 });
 </script>
 
 <template>
   <div ref="itemsList" class="chat__messages-list">
-    <h3
+    <div
       v-if="isLoaded && !items.length"
-      class="messages-list__header_empty"
+      class="messages-list__empty"
     >
       Сообщений нет
-    </h3>
+    </div>
     <div class="messages-list__empty-block" />
-
     <ChatMessageItem
       v-for="message in items"
       :key="message.id"
       :message="message"
       :user-id="userId"
+      @edit-message="editMessage"
     />
   </div>
 </template>
@@ -96,16 +130,23 @@ defineExpose({
   flex-direction: column;
   flex-grow: 1;
   overflow-y: auto;
+  padding: 1rem;
+  margin: -1rem;
 }
 
 .messages-list {
   &__empty-block {
+    min-height: 1rem;
     flex-grow: 1;
   }
 
-  &__header_empty {
-    font-weight: 500;
+  &__empty {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-top: 0.5rem;
+    font-weight: 500;
   }
 }
 </style>

@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import AppButton from "components/AppButton.vue";
 import AppInput from "components/AppInput.vue";
-import { createUser, sendEmailCode } from "services/userService.ts";
+import { resetPassword, sendEmailCode } from "services/userService.ts";
 import { ref } from "vue";
-import { login } from "services/authService.ts";
 import { useRouter } from "vue-router";
 import { useLoading } from "composables/loading.ts";
+import Notify from "composables/notify.ts";
 
 const { unique } = useLoading();
 const router = useRouter();
-const nick = ref<string>('');
 const email = ref<string>('');
 const code = ref<string>('');
 const password = ref<string>('');
@@ -26,35 +25,25 @@ const sendCode = async (): Promise<void> => {
   retry.value = Math.max(0, retryDelay - (passed || 0));
 }
 
-const onRegister = (event: Event): void => {
+const onReset = (event: Event): void => {
   event.preventDefault();
 
   unique(async (): Promise<void> => {
-    if (!await createUser(nick.value, email.value, code.value, password.value, passwordConfirmation.value)) {
+    if (!await resetPassword(email.value, code.value, password.value, passwordConfirmation.value)) {
       return;
     }
-    await login(email.value, password.value)
-      ? await router.push({ name: 'app' })
-      : await router.push({ name: 'login' });
+
+    Notify.sendGreen('Пароль успешно восстановлен')
+    await router.push({ name: 'login' });
   }, undefined)
 }
 </script>
 
 <template>
   <div class="auth__block">
-    <span class="auth__title">Регистрация</span>
+    <span class="auth__title">Восстановление пароля</span>
 
-    <form class="auth__form" @submit="onRegister">
-      <AppInput
-        v-model:model="nick"
-        type="text"
-        placeholder="Имя"
-        :minlength="3"
-        :maxlength="32"
-      />
-
-      <hr />
-
+    <form class="auth__form" @submit="onReset">
       <AppInput
         v-model:model="email"
         type="email"
@@ -96,9 +85,9 @@ const onRegister = (event: Event): void => {
         border="1px solid #7663fd"
         color="#fff"
         :fontWeight="600"
-        :disabled="!nick || !email || !code || !password || !passwordConfirmation"
+        :disabled="!email || !code || !password || !passwordConfirmation"
       >
-        Регистрация
+        Сохранить
       </AppButton>
     </form>
 

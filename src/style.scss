@@ -1,12 +1,14 @@
 :root {
   height: 100%;
+  box-sizing: border-box;
+  overscroll-behavior: none;
+  overflow: scroll;
 
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color: #212121;
-  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -25,7 +27,7 @@ body {
   place-items: center;
   min-width: 320px;
   height: 100%;
-  background: #fcfcfc;
+  background: #fbfdfc;
 }
 
 * {
@@ -58,34 +60,6 @@ textarea {
   font-family: inherit;
 }
 
-.auth__title {
-  font-size: 1.5rem;
-  font-weight: 800;
-  display: block;
-  margin: 0 auto 1rem auto;
-  text-align: center;
-}
-
-.auth__register-link button {
-  width: 100%;
-  margin-top: 0.5rem;
-}
-
 .card {
   padding: 2em;
-}
-
-.auth__block {
-  max-width: 240px;
-  width: 100%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  .auth__form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem
-  }
 }

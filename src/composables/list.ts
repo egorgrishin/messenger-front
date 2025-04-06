@@ -58,10 +58,10 @@ export function useList<T = Chat | Message | User>({
   const scrollList = (event: Event): void => {
     const list: HTMLDivElement = event.target as HTMLDivElement;
     if (
-      // Если пролистано 80% списка
-      !isUpDirection && list.scrollTop + list.clientHeight >= list.scrollHeight * 0.8
-      // Если до конца списка осталось расстояние равное половине высоты блока
-      || isUpDirection && list.scrollTop <= list.clientHeight * 0.5
+      // Если пролистали до конца
+      !isUpDirection && list.scrollTop + list.clientHeight >= list.scrollHeight
+      // Если долистали до верхней точки (0 пикселей сверху)
+      || isUpDirection && list.scrollTop === 0
     ) {
       loadItems().then();
     }

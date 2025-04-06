@@ -1,8 +1,6 @@
 import { useLoading } from "composables/loading.ts";
 import auth from "routes/auth";
 import base from "routes/base";
-import chat from "routes/chat";
-import user from "routes/user";
 import { checkAuth } from "services/authService.ts";
 import { createRouter, createWebHistory, RouteLocationNormalized, Router } from "vue-router";
 
@@ -12,21 +10,24 @@ const router: Router = createRouter({
   routes: [
     ...auth,
     ...base,
-    ...chat,
-    ...user,
   ],
 });
 
 router.beforeEach(async (
   to: RouteLocationNormalized,
 ): Promise<boolean | object> => {
-  // Блокируем параллельное выполнение кода
   return unique(async (): Promise<boolean | object> => {
     const name: string | undefined = to.name?.toString();
-    if (!name) return false;
+    if (!name) {
+      return false;
+    }
+
+    if (name === 'home') {
+      return true;
+    }
 
     const isLogged: boolean = await checkAuth();
-    return name === 'home' || isLogged !== ['login', 'register'].includes(name)
+    return isLogged !== ['login', 'register', 'reset'].includes(name)
       ? true
       : { name: 'home' };
   }, false);

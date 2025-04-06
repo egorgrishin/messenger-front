@@ -1,0 +1,48 @@
+.auth__title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  display: block;
+  margin: 0 auto 1rem auto;
+  text-align: center;
+}
+
+.auth__register-link button {
+  width: 100%;
+  margin-top: 0.75rem;
+}
+
+.card {
+  padding: 2em;
+}
+
+.auth__block {
+  max-width: 304px;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 1rem 0 #e9eeed;
+
+  .auth__form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem
+  }
+}
+
+input {
+  background: #f1f2f6 !important;
+
+  &:-webkit-autofill {
+    font-size: 1rem !important;
+    -webkit-box-shadow: 0 0 0 30px #f1f2f6 inset !important;
+  }
+
+  &:-webkit-autofill::first-line {
+    font-size: 1rem;
+  }
+}

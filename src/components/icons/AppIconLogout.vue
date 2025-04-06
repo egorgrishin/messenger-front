@@ -8,10 +8,9 @@ const props = defineProps<{
 <template>
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    class="bi bi-box-arrow-right"
-    viewBox="0 0 16 16"
+    viewBox="0 0 24 24"
+    width="24"
+    height="24"
     :fill="props.fill ? props.fill : 'currentColor'"
     :style="{
       height: size,
@@ -19,8 +18,14 @@ const props = defineProps<{
       display: 'block',
     }"
   >
-    <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
-    <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+    <path
+      d="M15 17.625C14.9264 19.4769 13.3831 21.0494 11.3156 20.9988C10.8346 20.987 10.2401 20.8194 9.05112 20.484C6.18961 19.6768 3.70555 18.3203 3.10956 15.2815C3 14.723 3 14.0944 3 12.8373L3 11.1627C3 9.90561 3 9.27705 3.10956 8.71846C3.70555 5.67965 6.18961 4.32316 9.05112 3.51603C10.2401 3.18064 10.8346 3.01295 11.3156 3.00119C13.3831 2.95061 14.9264 4.52307 15 6.37501"
+      stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+    />
+    <path
+      d="M21 12H10M21 12C21 11.2998 19.0057 9.99153 18.5 9.5M21 12C21 12.7002 19.0057 14.0085 18.5 14.5"
+      stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+    />
   </svg>
 </template>
 

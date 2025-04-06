@@ -6,6 +6,7 @@ import {
   AxiosGetChatMessages,
   AxiosGetUserChats,
 } from "interfaces/chat";
+import { AxiosResponse } from "axios";
 
 /**
  * Отправляет GET запрос на получение чата по ID
@@ -20,12 +21,9 @@ export async function apiFindChat(chatId: number): Promise<AxiosFindChat> {
 /**
  * Отправляет POST запрос на создание нового чата
  */
-export async function apiCreateChat(users: number[]): Promise<AxiosCreateChat> {
+export async function apiCreateChat(recipientId: number): Promise<AxiosCreateChat> {
   return await request
-    .post(`/api/v1/chats`, {
-      isDialog: true,
-      users,
-    })
+    .post(`/api/v1/chats`, { recipientId })
     .then((response: AxiosCreateChat) => response)
     .catch((error: any) => error.response);
 }
@@ -49,6 +47,29 @@ export async function apiCreateMessage(chatId: number, text: string | null, file
   return await request
     .post(`/api/v1/messages`, { chatId, text, fileUuids })
     .then((response: AxiosCreateMessage) => response)
+    .catch((error: any) => error.response);
+}
+
+/**
+ * Отправляет PUT запрос на обновление сообщения
+ */
+export async function apiUpdateMessage(messageId: number, text: string | null, fileUuids: string[] | null): Promise<AxiosResponse> {
+  return await request
+    .put(`/api/v1/messages/${messageId}`, {
+      text,
+      fileUuids
+    })
+    .then((response: AxiosResponse) => response)
+    .catch((error: any) => error.response);
+}
+
+/**
+ * Отправляет DELETE запрос на удаление сообщения
+ */
+export async function apiDeleteMessage(messageId: number): Promise<AxiosResponse> {
+  return await request
+    .delete(`/api/v1/messages/${messageId}`)
+    .then((response: AxiosResponse) => response)
     .catch((error: any) => error.response);
 }
 

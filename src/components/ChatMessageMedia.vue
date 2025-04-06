@@ -102,7 +102,7 @@ const showGallery = (startIndex: number): void => {
   img, .media__show-more {
     width: 100%;
     height: 100%;
-    border-radius: 5px;
+    border-radius: 0.75rem;
     object-fit: cover;
 
     position: absolute;

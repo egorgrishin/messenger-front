@@ -8,26 +8,44 @@ const props = defineProps<{
   userId: number,
   message: Message,
 }>();
+
+const emit = defineEmits<{
+  (e: 'editMessage', message: Message): void
+}>();
+
+const onMouseDown = (e: Event) => {
+  if (!(e.currentTarget as HTMLDivElement).classList.contains('right')) {
+    return;
+  }
+
+  emit('editMessage', props.message);
+}
 </script>
 
 <template>
   <div
     :class="{
       'messages-list__message': true,
-      left: message.userId !== props.userId,
-      right: message.userId === props.userId,
+      left: message.userId !== userId,
+      right: message.userId === userId,
     }"
+    @mousedown.right="onMouseDown"
+    @contextmenu.prevent
   >
     <ChatMessageMedia
       v-if="Types.getMediaFiles(message.files).length !== 0"
       :media-files="Types.getMediaFiles(message.files)"
     />
 
-    <span v-if="message.text">{{ message.text }}</span>
+    <span
+      v-if="message.text"
+      class="message__text"
+    >{{ message.text }}</span>
 
     <ChatMessageDocs
       v-if="Types.getDocsFiles(message.files).length !== 0"
       :files="message.files"
+      :is-right="message.userId === userId"
     />
   </div>
 </template>
@@ -36,28 +54,30 @@ const props = defineProps<{
 @use "assets/vars" as *;
 
 .left {
-  text-align: left;
   align-self: flex-start;
+  box-shadow: 0 0 0.5rem #e0ebe9;
+  background: #fbfdfc;
+  border: 1px solid #e8e9ed;
 }
 
 .right {
-  background: #f7f7f7;
-  text-align: right;
+  background: #7662fd;
+  color: #ffffff;
   align-self: flex-end;
+  box-shadow: 0 0 0.5rem #b7c0bf;
+  border: 1px solid #6653ec;
 }
 
 .messages-list__message {
   white-space: pre-wrap;
   word-wrap: break-word;
-  text-align: left;
-  max-width: 70%;
-  padding: 0.5rem 1rem;
-  border: 1px solid #ddd;
-  border-radius: 0.5rem;
+  max-width: min(70%, 580px);
+  border-radius: 0.75rem;
   margin-bottom: 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  hyphens: auto;
 
   .message__media-list {
     display: grid;
@@ -74,10 +94,10 @@ const props = defineProps<{
       aspect-ratio: 1 / 1;
       box-sizing: border-box;
 
-      img, .TTopen-more {
+      img {
         width: 100%;
         height: 100%;
-        border-radius: 5px;
+        border-radius: 0.75rem;
         object-fit: cover;
 
         position: absolute;
@@ -98,11 +118,15 @@ const props = defineProps<{
   }
 }
 
+.messages-list__message:not(:has(.message__media-list)):has(.message__text):has(.doc) .message__text {
+  padding-top: 0.5rem;
+}
+
 .messages-list__message:has(.message__media-list) {
   width: 100%;
 }
 
-.TTmedia-video, .TTopen-more {
+.TTmedia-video {
   img {
     filter: brightness(50%);
   }
@@ -135,5 +159,17 @@ const props = defineProps<{
     font-weight: 500;
     margin-top: 0.5rem;
   }
+}
+
+.message__text {
+  padding: 0 0.5rem;
+}
+
+.message__text:only-child {
+  padding: 0.5rem 0.75rem;
+}
+
+.message__text:last-child:not(:nth-child(1)) {
+  padding-bottom: 0.5rem;
 }
 </style>

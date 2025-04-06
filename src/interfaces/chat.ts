@@ -14,15 +14,18 @@ export interface Message {
 
 export interface Chat {
   id: number,
-  title?: string,
-  isDialog: boolean,
   lastMessageId?: number,
   lastMessage?: Message,
   users?: User[],
 }
 
 export type AxiosFindChat = AxiosResponse<{ data: Chat }>;
-export type AxiosCreateChat = AxiosResponse<{ data: Chat }>;
+export type AxiosCreateChat = AxiosResponse<{
+  data: {
+    isCreated: boolean,
+    chat: Chat,
+  },
+}>;
 export type AxiosGetUserChats = AxiosResponse<{ data: Chat[] }>;
 export type AxiosCreateMessage = AxiosResponse<{ data: Message }>;
 export type AxiosGetChatMessages = AxiosResponse<{ data: Message[] }>;

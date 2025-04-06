@@ -2,23 +2,16 @@
 import { Chat } from "interfaces/chat";
 import { User } from "interfaces/user";
 import { num2word } from "@/helper/word.ts";
+import Online from "composables/online.ts";
 
 // ID текущего пользователя
 const userId: number = +(localStorage.getItem('userId') || 0);
 const props = defineProps<{
   chat: Chat,
+  isSelected: boolean,
 }>();
 
-// Возвращает название чата
-const getChatName = (chat: Chat): string => {
-  return chat
-    .users
-    ?.filter((user: User) => user.id !== userId)[0]
-    .nick || 'No name';
-};
-
-// Возвращает первую букву названия чата
-const getFirstLetter = (nick: string): string => nick[0];
+const recipient = (props.chat.users as User[]).filter((user: User) => user.id !== userId)[0];
 
 // Возвращает дату и время последнего сообщения
 const getFormattedDate: (datetime: string) => string = (datetime: string): string => {
@@ -43,26 +36,63 @@ const getChatText = (): string => {
   }
   return 'Сообщений нет';
 }
+
+const isOnline = Online.getIsOnline(recipient.id);
 </script>
 
 <template>
-  <div class="chat">
+  <div
+    class="chat"
+    :style="{
+    background: isSelected ? '#7662FE' : undefined,
+    color: isSelected ? '#fff' : undefined,
+    borderRadius: isSelected ? '0.75rem' : undefined,
+    }"
+  >
     <div class="chat__avatar">
-      {{ getFirstLetter(getChatName(props.chat)).toUpperCase() }}
+      <img
+        v-if="recipient.avatarUrl"
+        :src="recipient.avatarUrl"
+        class="avatar"
+      />
+      <span v-else>
+         {{ recipient.nick[0].toUpperCase() }}
+      </span>
+
     </div>
     <div class="chat__preview">
       <div class="preview__header">
-        <span class="header__title">
-          {{ getChatName(props.chat) }}
-        </span>
-        <span class="header__date" v-if="props.chat.lastMessage">
+        <div class="header__title-block">
+          <span class="header__title">
+            {{ recipient.nick }}
+          </span>
+          <div
+            v-if="isOnline"
+            class="header__title__online"
+          ></div>
+        </div>
+        <span
+          class="header__date"
+          v-if="props.chat.lastMessage"
+          :style="{
+            color: isSelected ? '#ddd' : undefined,
+          }"
+        >
           {{ getFormattedDate(props.chat.lastMessage.createdAt) }}
         </span>
       </div>
-      <span class="preview__message">
+      <span
+        class="preview__message"
+        :style="{
+        color: isSelected ? '#ddd' : undefined,
+        }"
+      >
           <span
             v-if="props.chat.lastMessage?.userId === userId"
             class="preview__message-author"
+            :style="{
+              color: isSelected ? '#eee' : undefined,
+            }"
           >Вы:</span>
           {{ getChatText() }}
         </span>
@@ -71,15 +101,17 @@ const getChatText = (): string => {
 </template>
 
 <style scoped lang="scss">
+.avatar {
+  height: 100%;
+  width: 100%;
+  border-radius: 4rem;
+}
+
 .chat {
   display: flex;
   align-items: center;
-  padding-bottom: 0.75rem;
+  padding: 0.5rem 1rem;
   cursor: pointer;
-
-  &:last-child {
-    padding-bottom: 0;
-  }
 
   &__avatar {
     width: 4rem;
@@ -124,8 +156,21 @@ const getChatText = (): string => {
 }
 
 .header {
+  &__title-block {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
   &__title {
     font-weight: 500;
+  }
+
+  &__title__online {
+    width: 0.5rem;
+    height: 0.5rem;
+    background: #7663fd;
+    border-radius: 0.5rem;
   }
 
   &__date {

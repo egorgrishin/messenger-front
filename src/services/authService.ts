@@ -23,7 +23,8 @@ function logout(): void {
   localStorage.removeItem('refreshToken');
   localStorage.removeItem('userId');
   localStorage.removeItem('userNick');
-  sendNick(null);
+  localStorage.removeItem('userAvatarUrl');
+  sendUserData(null, null);
 }
 
 /**
@@ -47,7 +48,7 @@ async function checkAuth(): Promise<boolean> {
 /**
  * Обновляет пару токенов, используя refresh токен
  */
-async function refresh(refreshToken: string): Promise<boolean> {
+export async function refresh(refreshToken: string): Promise<boolean> {
   const response: AxiosLogin = await apiRefresh(refreshToken);
   if (response.status === 200) {
     saveAuthData(response.data);
@@ -66,7 +67,8 @@ function saveAuthData(data: LoginResponse): void {
   localStorage.setItem('refreshToken', data.refreshToken);
   localStorage.setItem('userId', String(payload.id));
   localStorage.setItem('userNick', payload.nick);
-  sendNick(payload.nick);
+  localStorage.setItem('userAvatarUrl', payload.avatarUrl || '');
+  sendUserData(payload.nick, payload.avatarUrl);
 }
 
 /**
@@ -80,10 +82,11 @@ function getPayload(accessToken: string): PayloadAccessToken {
 /**
  * Отправляет событие для получения ника в шапке сайта
  */
-function sendNick(nick: string | null): void {
+function sendUserData(nick: string | null, avatarUrl: string | null): void {
   window.dispatchEvent(new CustomEvent('auth', {
     detail: {
       nick: nick,
+      avatarUrl: avatarUrl,
     },
   }));
 }

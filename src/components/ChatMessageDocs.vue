@@ -5,6 +5,7 @@ import { Types } from "@/helper/file.ts";
 
 const props = defineProps<{
   files: FileModel[],
+  isRight: boolean,
 }>();
 
 const getDocName = (filename: string) => {
@@ -19,23 +20,23 @@ const getDocExtension = (filename: string) => {
 </script>
 
 <template>
-  <div>
-    <div
-      v-for="file in Types.getDocsFiles(props.files)"
-      :key="file.uuid"
-      class="doc"
+  <div
+    v-for="file in Types.getDocsFiles(props.files)"
+    :key="file.uuid"
+    class="doc"
+  >
+    <a
+      :href="file.url"
+      class="doc__item"
+      target="_blank"
+      download
     >
-      <a
-        :href="file.url"
-        class="doc__item"
-        target="_blank"
-        download
-      >
-        <AppIconDoc size="1.5rem" style="flex-shrink: 0; margin-right: 0.5rem" />
-        <span class="doc__item-name">{{ getDocName(file.filename) }}</span>
-        <span class="doc__item-ext">{{ getDocExtension(file.filename) }}</span>
-      </a>
-    </div>
+      <AppIconDoc
+        size="1.5rem" :fill="isRight ? '#fff' : 'currentColor'" style="flex-shrink: 0; margin-right: 0.5rem"
+      />
+      <span class="doc__item-name">{{ getDocName(file.filename) }}</span>
+      <span class="doc__item-ext">{{ getDocExtension(file.filename) }}</span>
+    </a>
   </div>
 </template>
 
@@ -43,9 +44,14 @@ const getDocExtension = (filename: string) => {
 .doc {
   display: flex;
   margin-bottom: 0.5rem;
+  padding: 0 0.5rem;
 
   &:last-child {
-    margin-bottom: 0;
+    //margin-bottom: 0;
+  }
+
+  &:first-child {
+    margin-top: 0.5rem;
   }
 
   &__item {
@@ -64,5 +70,14 @@ const getDocExtension = (filename: string) => {
       color: #000;
     }
   }
+}
+
+.doc:first-child {
+  color: red;
+}
+
+.right .doc__item-name,
+.right .doc__item-ext {
+  color: #fff;
 }
 </style>

@@ -1,5 +1,7 @@
 import { checkAuth } from "services/authService.ts";
 
+const MessengerChatView = () => import('views/MessengerChatView.vue');
+
 // noinspection JSUnusedGlobalSymbols
 export default [
   {
@@ -8,8 +10,14 @@ export default [
     component: {},
     beforeEnter: async (): Promise<{ name: string }> => {
       return await checkAuth()
-        ? { name: 'chat.index' }
+        ? { name: 'app' }
         : { name: 'login' };
     },
   },
+  {
+    path: '/app',
+    name: 'app',
+    component: MessengerChatView,
+    meta: { layout: 'messenger' },
+  }
 ];

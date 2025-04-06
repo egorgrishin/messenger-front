@@ -18,10 +18,13 @@ const props = defineProps<{
       display: 'block',
     }"
   >
-    <path d="M17.5 17.5L22 22" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
     <path
-      d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11Z"
-      stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+      d="M22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12Z"
+      stroke="#212121" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+    />
+    <path
+      d="M15.5 15.5L8.50076 8.5M8.50151 15.5L15.5008 8.5"
+      stroke="#212121" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
     />
   </svg>
 </template>

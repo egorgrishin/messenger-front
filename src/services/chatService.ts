@@ -3,7 +3,7 @@ import {
   apiCreateChat,
   apiGetUserChats,
   apiCreateMessage,
-  apiGetChatMessages,
+  apiGetChatMessages, apiDeleteMessage, apiUpdateMessage,
 } from "api/chat";
 import {
   AxiosCreateChat,
@@ -15,25 +15,24 @@ import {
   Message
 } from "interfaces/chat";
 import Notify from "composables/notify.ts";
+import { AxiosResponse } from "axios";
 
 /**
  * Возвращает чат по ID
  */
 async function findChat(chatId: number): Promise<Chat | null> {
   const response: AxiosFindChat = await apiFindChat(chatId);
-  if (response.status === 200) {
-    return response.data.data;
-  }
-  Notify.send('Чат не найден');
-  return null;
+  return response.status === 200
+    ? response.data.data
+    : null;
 }
 
 /**
  * Создает новый чат
  */
-async function createChat(users: number[]): Promise<Chat | null> {
-  const response: AxiosCreateChat = await apiCreateChat(users);
-  if (response.status === 201) {
+async function createChat(recipientId: number): Promise<{ isCreated: boolean, chat: Chat } | null> {
+  const response: AxiosCreateChat = await apiCreateChat(recipientId);
+  if ([200, 201].includes(response.status)) {
     return response.data.data;
   }
   Notify.send('Ошибка создания чата');
@@ -69,6 +68,34 @@ async function createMessage(
 }
 
 /**
+ * Удаляет сообщение
+ */
+async function updateMessage(
+  messageId: number,
+  text: string | null,
+  fileUuids: string[] | null = null,
+): Promise<Message | null> {
+  const response: AxiosResponse = await apiUpdateMessage(messageId, text, fileUuids);
+  if (response.status === 200) {
+    return response.data.data;
+  }
+  Notify.send('Не удалось обновить ссообщение')
+  return null;
+}
+
+/**
+ * Удаляет сообщение
+ */
+async function deleteMessage(messageId: number): Promise<boolean> {
+  const response: AxiosResponse = await apiDeleteMessage(messageId);
+  if (response.status === 204) {
+    return true;
+  }
+  Notify.send('Не удалось удалить ссообщение')
+  return false;
+}
+
+/**
  * Загружает список сообщений чата с ID сообщения меньше указанного
  */
 async function getChatMessages(chatId: number, startId: number | null = null): Promise<Message[] | null> {
@@ -85,5 +112,7 @@ export {
   createChat,
   getUserChats,
   createMessage,
+  updateMessage,
+  deleteMessage,
   getChatMessages,
 };

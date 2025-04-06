@@ -3,14 +3,14 @@ import { FileModel, InputFile } from 'interfaces/file';
 import AppIconDoc from 'components/icons/AppIconDoc.vue';
 import AppIconVideo from 'components/icons/AppIconVideo.vue';
 import AppIconImage from 'components/icons/AppIconImage.vue';
-import AppIconClose from 'components/icons/AppIconClose.vue';
+import AppIconCloseRounded from 'components/icons/AppIconCloseRounded.vue';
 import { UUID } from 'uuidjs';
 import { createFile } from 'services/fileService.ts';
 import { startFancybox, Types } from '@/helper/file.ts';
 import { userSlideType } from '@fancyapps/ui/types/Carousel/types';
 
 // Открытые файлы
-const inputFiles = defineModel<Map<string, InputFile>>('files', {
+const inputFiles = defineModel<Map<string, InputFile | FileModel>>('files', {
   required: true,
 });
 
@@ -35,7 +35,7 @@ const uploadFiles = (event: Event) => {
 
     createFile(uuid, file)
       .then((file: FileModel) => {
-        const inputFile = inputFiles.value.get(file.uuid);
+        const inputFile = inputFiles.value.get(file.uuid) as InputFile;
         if (!inputFile) {
           return;
         }
@@ -71,10 +71,18 @@ const showGallery = (selectedFileUuid: string): void => {
     if (!isStopped) {
       startIndex++;
     }
-    if (file.model && Types.isMediaByModel(file.model)) {
+
+    let fileForShow = null;
+    if ('type' in file) {
+      fileForShow = file;
+    } else if (file.model && Types.isMediaByModel(file.model)) {
+      fileForShow = file.model;
+    }
+
+    if (fileForShow !== null) {
       slides.push({
-        src: file.model.url,
-        thumbSrc: file.model.videoPreviewUrl ?? undefined,
+        src: fileForShow.url,
+        thumbSrc: fileForShow.videoPreviewUrl ?? undefined,
       });
     }
   }
@@ -85,6 +93,10 @@ const showGallery = (selectedFileUuid: string): void => {
 const getBackgroundUrl = (file: FileModel) => {
   return (Types.isImageByModel(file) ? file.url : file.videoPreviewUrl) || undefined;
 };
+
+const isFileModel = (file: InputFile | FileModel): boolean => {
+  return 'type' in file;
+}
 
 defineExpose({
   onSelectFile,
@@ -101,19 +113,19 @@ defineExpose({
       @click="() => showGallery(uuid)"
       :class="{
           'chat__files-item': true,
-          'chat__files-item-loaded': !!inputFile.model,
+          'chat__files-item-loaded': isFileModel(inputFile) ? true : !!(inputFile as InputFile).model,
         }"
     >
       <div
         @click.stop="() => deleteFile(inputFile.uuid)"
         class="chat__files-item-close"
       >
-        <AppIconClose size="1.25rem" fill="#fff" />
+        <AppIconCloseRounded size="1.25rem" fill="#fff" />
       </div>
 
       <img
-        v-if="inputFile.model && Types.isMedia(inputFile)"
-        :src="getBackgroundUrl(inputFile.model)"
+        v-if="(isFileModel(inputFile) || (inputFile as InputFile).model) && Types.isMedia(inputFile)"
+        :src="getBackgroundUrl((isFileModel(inputFile) ? inputFile : (inputFile as InputFile).model) as FileModel)"
         class="chat__files-item-preview"
       >
       <div v-else>

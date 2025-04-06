@@ -26,36 +26,46 @@ export class Types {
   static readonly DOC = 3;
   static readonly MAX_IN_MESSAGE = 10;
 
-  public static isImage(inputFile: InputFile): boolean {
-    return inputFile.model
-      ? this.isImageByModel(inputFile.model)
-      : inputFile.original.type.startsWith('image');
+  public static isImage(file: InputFile | FileModel): boolean {
+    if ('type' in file ) {
+      return this.isImageByModel(file);
+    }
+    return file.model
+      ? this.isImageByModel(file.model)
+      : file.original.type.startsWith('image');
   };
 
   public static isImageByModel(file: FileModel): boolean {
     return file.type === Types.IMAGE;
   };
 
-  public static isVideo(inputFile: InputFile): boolean {
-    return inputFile.model
-      ? this.isVideoByModel(inputFile.model)
-      : inputFile.original.type.startsWith('video');
+  public static isVideo(file: InputFile | FileModel): boolean {
+    if ('type' in file ) {
+      return this.isVideoByModel(file);
+    }
+    return file.model
+      ? this.isVideoByModel(file.model)
+      : file.original.type.startsWith('video');
   };
 
   public static isVideoByModel(file: FileModel): boolean {
     return file.type === Types.VIDEO;
   };
 
-  public static isDoc(inputFile: InputFile): boolean {
-    return !this.isImage(inputFile) && !this.isVideo(inputFile);
+  public static isDoc(file: InputFile | FileModel): boolean {
+    return 'type' in file
+      ? this.isDocByModel(file)
+      : !this.isImage(file) && !this.isVideo(file);
   };
 
   public static isDocByModel(file: FileModel): boolean {
     return !this.isImageByModel(file) && !this.isVideoByModel(file);
   };
 
-  public static isMedia(file: InputFile): boolean {
-    return this.isImage(file) || this.isVideo(file);
+  public static isMedia(file: InputFile | FileModel): boolean {
+    return 'type' in file
+      ? this.isMediaByModel(file)
+      : this.isImage(file) || this.isVideo(file);
   };
 
   public static isMediaByModel(file: FileModel): boolean {

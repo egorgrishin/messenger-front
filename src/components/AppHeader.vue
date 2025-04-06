@@ -61,7 +61,7 @@ header {
   align-items: center;
   padding: 0 1.5rem;
   box-sizing: border-box;
-  background: #fff;
+  //background: #fff;
 }
 
 .logo {

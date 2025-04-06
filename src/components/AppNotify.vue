@@ -4,7 +4,13 @@ import Notify from "composables/notify";
 
 <template>
   <Transition>
-    <div class="notify" v-if="Notify.text.value">
+    <div
+      v-if="Notify.text.value"
+      class="notify"
+      :style="{
+        background: Notify.color.value || '#D0342C',
+      }"
+    >
       <span class="notify__text">{{ Notify.text.value }}</span>
     </div>
   </Transition>
@@ -18,7 +24,6 @@ import Notify from "composables/notify";
   max-width: 18rem;
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  background: #D0342C;
 
   .notify__text {
     color: #fff;

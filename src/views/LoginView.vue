@@ -8,7 +8,7 @@ import { useLoading } from "composables/loading.ts";
 
 const { unique } = useLoading();
 const router = useRouter();
-const nick = ref<string>('');
+const email = ref<string>('');
 const password = ref<string>('');
 
 const onLogin = (event: Event): void => {
@@ -16,8 +16,8 @@ const onLogin = (event: Event): void => {
 
   // Блокируем параллельное выполнение кода
   unique(async (): Promise<void> => {
-    if (await login(nick.value, password.value)) {
-      await router.push({ name: 'chat.index' });
+    if (await login(email.value, password.value)) {
+      await router.push({ name: 'app' });
     }
   }, undefined);
 }
@@ -25,13 +25,13 @@ const onLogin = (event: Event): void => {
 
 <template>
   <div class="auth__block">
-    <span class="auth__title">Вход в аккаунт</span>
+    <span class="auth__title">Вход</span>
 
     <form class="auth__form" @submit="onLogin">
       <AppInput
-        v-model:model="nick"
-        type="text"
-        placeholder="Логин"
+        v-model:model="email"
+        type="email"
+        placeholder="Почта"
         autocomplete
       />
       <AppInput
@@ -40,21 +40,38 @@ const onLogin = (event: Event): void => {
         placeholder="Пароль"
         autocomplete
       />
-      <AppButton bg="#212121" color="#fff" :fontWeight="600">Войти</AppButton>
+      <AppButton
+        bg="#7663fd"
+        border="1px solid #7663fd"
+        color="#fff"
+        :fontWeight="600"
+      >
+        Войти
+      </AppButton>
     </form>
 
     <RouterLink :to="{ name: 'register' }" class="auth__register-link">
       <AppButton
         bg="#fff"
-        border="1px solid #212121"
+        border="1px solid #e8e9ed"
         color="#212121"
       >
         Создать аккаунт
       </AppButton>
     </RouterLink>
+
+    <RouterLink :to="{ name: 'reset' }" class="auth__register-link">
+      <AppButton
+        bg="#fff"
+        border="1px solid #e8e9ed"
+        color="#212121"
+      >
+        Восстановить пароль
+      </AppButton>
+    </RouterLink>
   </div>
 </template>
 
-<style scoped>
-
+<style lang="scss" scoped>
+@use "assets/auth" as *;
 </style>
