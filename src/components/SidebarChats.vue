@@ -35,7 +35,7 @@ defineExpose({
     />
   </div>
   <KeepAlive>
-    <SidebarSearch v-if="search" :search="search" />
+    <SidebarSearch v-if="search.trim()" :search="search" />
     <SidebarChatList v-else @openChat="openChat" />
   </KeepAlive>
 </template>

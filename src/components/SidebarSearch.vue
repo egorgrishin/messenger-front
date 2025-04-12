@@ -14,8 +14,14 @@ const props = defineProps<{
 
 const { unique } = useLoading();
 const isLoaded = ref<boolean>(false);
+let prevSearch: string = props.search.trim();
 
-watch(() => props.search, () => search());
+watch(() => props.search, () => {
+  if (prevSearch !== props.search.trim()) {
+    search();
+  }
+  prevSearch = props.search.trim();
+});
 
 const {
   itemsList, // HTML элемент - список пользователей
@@ -23,7 +29,7 @@ const {
   loadItems, // Функция загрузки пользователей
   reset,     // Функция сброса состояния списка
 } = useList<User>({
-  itemsGetter: (lastId: number | null): Promise<User[] | null> => getUsers(props.search, lastId),
+  itemsGetter: (lastId: number | null): Promise<User[] | null> => getUsers(props.search.trim(), lastId),
   lastIdGetter: (items: User[]) => items[items.length - 1].id,
 });
 
