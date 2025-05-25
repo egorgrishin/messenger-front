@@ -8,6 +8,7 @@ import { UUID } from 'uuidjs';
 import { createFile } from 'services/fileService.ts';
 import { startFancybox, Types } from '@/helper/file.ts';
 import { userSlideType } from '@fancyapps/ui/types/Carousel/types';
+import Notify from "composables/notify.ts";
 
 // Открытые файлы
 const inputFiles = defineModel<Map<string, InputFile | FileModel>>('files', {
@@ -25,7 +26,19 @@ const uploadFiles = (event: Event) => {
     return;
   }
 
+  let sent = false;
+  const newList: File[] = [];
   for (const file of list) {
+    if (file.size <= 524_288_000) {
+      newList.push(file);
+    }
+    if (!sent) {
+      Notify.sendRed('Файл не должен быть больше 500мб');
+      sent = true;
+    }
+  }
+
+  for (const file of newList) {
     const uuid = UUID.generate();
     inputFiles.value.set(uuid, {
       uuid: uuid,
