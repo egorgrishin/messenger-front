@@ -31,6 +31,7 @@ const uploadFiles = (event: Event) => {
   for (const file of list) {
     if (file.size <= 524_288_000) {
       newList.push(file);
+      continue;
     }
     if (!sent) {
       Notify.sendRed('Файл не должен быть больше 500мб');
