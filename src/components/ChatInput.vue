@@ -107,7 +107,11 @@ const onSubmit = (): void => {
 };
 
 const onSend = () => {
-  let message: string | null = text.value.trim();
+  let message: string = text.value.trim();
+  if (message.length > 5000) {
+    Notify.sendRed('Длина сообщения не должна превышать 5000 символов');
+    return;
+  }
   if (!message && files.value.size === 0) {
     return;
   }
