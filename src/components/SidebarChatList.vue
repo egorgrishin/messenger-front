@@ -18,10 +18,6 @@ watch(() => route.params.chatId, (value) => {
   selectedChatId.value = +value || null;
 });
 
-const emit = defineEmits<{
-  (e: 'openChat', chat: Chat): void
-}>();
-
 const {
   itemsList, // HTML элемент - список чатов
   items,     // Список чатов
