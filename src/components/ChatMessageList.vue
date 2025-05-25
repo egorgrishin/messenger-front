@@ -22,7 +22,6 @@ const {
   items,     // Список сообщений
   loadItems, // Функция загрузки сообщений
   setScroll, // Функция для скролла списка сообщений
-  reset,
 } = useList<Message>({
   direction: Direction.Up,
   itemsGetter: async (lastId: number | null): Promise<Message[] | null> => {

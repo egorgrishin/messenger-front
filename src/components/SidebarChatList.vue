@@ -33,7 +33,7 @@ const {
 
 loadItems().then(() => isLoaded.value = true);
 
-const chatUpdated = async (updatedChat: Chat): void => {
+const chatUpdated = async (updatedChat: Chat): Promise<void> => {
   items.value = items.value.filter((chat: Chat) => chat.id != updatedChat.id);
   let i;
   for (i = 0; i < items.value.length; i++) {

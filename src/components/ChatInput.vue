@@ -113,7 +113,7 @@ const onSend = () => {
   }
 
   const inputFiles = Array.from(files.value.values());
-  const unloadedFiles = inputFiles.filter(file => !file.model);
+  const unloadedFiles = inputFiles.filter(file => !('model' in file) || !file.model);
   if (unloadedFiles.length > 0) {
     return;
   }
