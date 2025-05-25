@@ -24,6 +24,7 @@ import Notify from "composables/notify";
   max-width: 18rem;
   padding: 0.5rem 1rem;
   border-radius: 4px;
+  z-index: 9;
 
   .notify__text {
     color: #fff;
